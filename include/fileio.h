@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #define MAX_LINE 1000
 
 #include <stdio.h>
@@ -6,36 +6,36 @@
 #include <string.h>
 #include <task.h>
 
-void fileDiagnosis(); //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
-Task* readFile();//Task µ¿ÀûÀ¸·Î ÀúÀå
-void enrollTask(Task);//ÆÄÀÏ Ãß°¡
-void deleteTask(const char*);//ÆÄÀÏ Áö¿ì±â
-int TaskCount();// Task °¹¼ö ÀÎÆ® ¹İÈ¯
+void fileDiagnosis(); //ë¬´ê²°ì„±ê²€ì‚¬ ì‹¤íŒ¨ì‹œ return -1
+Task* readFile();//Task ë™ì ìœ¼ë¡œ ì €ì¥
+void enrollTask(Task);//íŒŒì¼ ì¶”ê°€
+void deleteTask(const char*);//íŒŒì¼ ì§€ìš°ê¸°
+int TaskCount();// Task ê°¯ìˆ˜ ì¸íŠ¸ ë°˜í™˜
 
 
-//¾Ö³×µéÀº ¹«°á¼º °Ë»ç½Ã ÇÊ¿äÇÑ ¾Öµé ´Ù ½ÇÆĞ½Ã return  -1 ¾Ö³×µéÀº ÁÖ¼® Á¦´ë·Î ¾ÈÇØ³õ°í ³ª¸¸ ¾µ°Å °°À½
-int check_compatable();//Áø¸®°ª¿¡ µé¾î°¡´Â ¹®ÀÚ Á¡°Ë
-int check_id();//¾ÆÀÌµğ Á¡°Ë
-int check_special(char* date); //³¯Â¥ Á¡°Ë1
-int check_day(int date); //³¯Â¥ Á¡°Ë2
-int change_date(char* date); //³¯Â¥ Á¡°Ë3
-int check_calandr();//°ãÄ¡¸é ³¯Â¥ Á¡°Ë
+//ì• ë„¤ë“¤ì€ ë¬´ê²°ì„± ê²€ì‚¬ì‹œ í•„ìš”í•œ ì• ë“¤ ë‹¤ ì‹¤íŒ¨ì‹œ return  -1 ì• ë„¤ë“¤ì€ ì£¼ì„ ì œëŒ€ë¡œ ì•ˆí•´ë†“ê³  ë‚˜ë§Œ ì“¸ê±° ê°™ìŒ
+int check_compatable();//ì§„ë¦¬ê°’ì— ë“¤ì–´ê°€ëŠ” ë¬¸ì ì ê²€
+int check_id();//ì•„ì´ë”” ì ê²€
+int check_special(char* date); //ë‚ ì§œ ì ê²€1
+int check_day(int date); //ë‚ ì§œ ì ê²€2
+int change_date(char* date); //ë‚ ì§œ ì ê²€3
+int check_calandr();//ê²¹ì¹˜ë©´ ë‚ ì§œ ì ê²€
 
 Task* readfile() {
-    // CSV ÆÄÀÏ ¿­±â
+    // CSV íŒŒì¼ ì—´ê¸°
     FILE* csv_file = fopen("data.csv", "r");
 
     if (csv_file == NULL) {
         csv_file = fopen("data.csv", "w");
     }
 
-    // CSV ÆÄÀÏ¿¡¼­ µ¥ÀÌÅÍ ÀĞ±â
+    // CSV íŒŒì¼ì—ì„œ ë°ì´í„° ì½ê¸°
     char line[MAX_LINE];
     Task* datas = NULL;
     int i = 0;
     const char* sim = ",";
     while (fgets(line, MAX_LINE, csv_file)) {
-        // ½°Ç¥·Î ±¸ºĞµÈ µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© ±¸Á¶Ã¼ ÇÊµå¿¡ ÀúÀå
+        // ì‰¼í‘œë¡œ êµ¬ë¶„ëœ ë°ì´í„°ë¥¼ íŒŒì‹±í•˜ì—¬ êµ¬ì¡°ì²´ í•„ë“œì— ì €ì¥
         char* field;
         Task data;
         field = strtok(line, sim);
@@ -53,21 +53,21 @@ Task* readfile() {
         field = strtok(NULL, "\n");
         data.contents = _strdup(field);
 
-        // ±¸Á¶Ã¼ ¹è¿­¿¡ Ãß°¡
+        // êµ¬ì¡°ì²´ ë°°ì—´ì— ì¶”ê°€
         datas = realloc(datas, (i + 1) * sizeof(Task));
         datas[i] = data;
 
         i++;
     }
 
-    // CSV ÆÄÀÏ ´İ±â
+    // CSV íŒŒì¼ ë‹«ê¸°
     fclose(csv_file);
 
     return datas;
-} //Task µ¿ÀûÀ¸·Î ÀúÀå
+} //Task ë™ì ìœ¼ë¡œ ì €ì¥
 
 
-void enrollTask(Task newTask) {//ÆÄÀÏ Ãß°¡
+void enrollTask(Task newTask) {//íŒŒì¼ ì¶”ê°€
 
     FILE* file = fopen("data.csv", "a");
 
@@ -76,24 +76,24 @@ void enrollTask(Task newTask) {//ÆÄÀÏ Ãß°¡
     fprintf(file, "\n%s,%c,%s,%s,%s", fir.id, fir.compatable, fir.startDate, fir.endDate, fir.contents);
 
 
-    // CSV ÆÄÀÏ ´İ±â
+    // CSV íŒŒì¼ ë‹«ê¸°
     fclose(file);
 
 }
 
-void deleteTask(const char* idA) {//ÆÄÀÏ Áö¿ì±â ¾ÆÀÌµğ ¹ŞÀ¸¸é ÁöÀ½ ¾øÀ¸¸é ¾Æ¹«ÀÏ ¾øÀ½
+void deleteTask(const char* idA) {//íŒŒì¼ ì§€ìš°ê¸° ì•„ì´ë”” ë°›ìœ¼ë©´ ì§€ìŒ ì—†ìœ¼ë©´ ì•„ë¬´ì¼ ì—†ìŒ
 
-    // CSV ÆÄÀÏ ¿­±â
+    // CSV íŒŒì¼ ì—´ê¸°
     FILE* csv_file = fopen("data.csv", "r");
 
-    // CSV ÆÄÀÏ¿¡¼­ µ¥ÀÌÅÍ ÀĞ±â
+    // CSV íŒŒì¼ì—ì„œ ë°ì´í„° ì½ê¸°
     char line[MAX_LINE];
     Task* datas = NULL;
     int i = 0;
     const char* sim = ",";
 
     while (fgets(line, MAX_LINE, csv_file)) {
-        // ½°Ç¥·Î ±¸ºĞµÈ µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© ±¸Á¶Ã¼ ÇÊµå¿¡ ÀúÀå
+        // ì‰¼í‘œë¡œ êµ¬ë¶„ëœ ë°ì´í„°ë¥¼ íŒŒì‹±í•˜ì—¬ êµ¬ì¡°ì²´ í•„ë“œì— ì €ì¥
         char* field;
         Task data;
         field = strtok(line, sim);
@@ -111,7 +111,7 @@ void deleteTask(const char* idA) {//ÆÄÀÏ Áö¿ì±â ¾ÆÀÌµğ ¹ŞÀ¸¸é ÁöÀ½ ¾øÀ¸¸é ¾Æ¹«ÀÏ
         field = strtok(NULL, "\n");
         data.contents = _strdup(field);
 
-        // ±¸Á¶Ã¼ ¹è¿­¿¡ Ãß°¡
+        // êµ¬ì¡°ì²´ ë°°ì—´ì— ì¶”ê°€
         datas = realloc(datas, (i + 1) * sizeof(Task));
         datas[i] = data;
 
@@ -137,23 +137,23 @@ void deleteTask(const char* idA) {//ÆÄÀÏ Áö¿ì±â ¾ÆÀÌµğ ¹ŞÀ¸¸é ÁöÀ½ ¾øÀ¸¸é ¾Æ¹«ÀÏ
         fprintf(file, "%s,%c,%s,%s,%s", end.id, end.compatable, end.startDate, end.endDate, end.contents);
     }
 
-    // CSV ÆÄÀÏ ´İ±â
+    // CSV íŒŒì¼ ë‹«ê¸°
     fclose(file);
 }
 
 
-int TaskCount() { // Task °¹¼ö ÀÎÆ® ¹İÈ¯
+int TaskCount() { // Task ê°¯ìˆ˜ ì¸íŠ¸ ë°˜í™˜
 
-    // CSV ÆÄÀÏ ¿­±â
+    // CSV íŒŒì¼ ì—´ê¸°
     FILE* csv_file = fopen("data.csv", "r");
 
-    // CSV ÆÄÀÏ¿¡¼­ µ¥ÀÌÅÍ ÀĞ±â
+    // CSV íŒŒì¼ì—ì„œ ë°ì´í„° ì½ê¸°
     char line[MAX_LINE];
     Task* datas = NULL;
     int count = 0;
 
     while (fgets(line, MAX_LINE, csv_file)) {
-        // ½°Ç¥·Î ±¸ºĞµÈ µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© ±¸Á¶Ã¼ ÇÊµå¿¡ ÀúÀå
+        // ì‰¼í‘œë¡œ êµ¬ë¶„ëœ ë°ì´í„°ë¥¼ íŒŒì‹±í•˜ì—¬ êµ¬ì¡°ì²´ í•„ë“œì— ì €ì¥
         char* field;
         field = strtok(line, "\n");
         count++;
@@ -164,7 +164,7 @@ int TaskCount() { // Task °¹¼ö ÀÎÆ® ¹İÈ¯
 
 
 
-int fileDiagnosis() { //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
+int fileDiagnosis() { //ë¬´ê²°ì„±ê²€ì‚¬ ì‹¤íŒ¨ì‹œ return -1
 
     FILE* csv_file = fopen("data.csv", "r");
 
@@ -176,18 +176,18 @@ int fileDiagnosis() { //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
     char line[MAX_LINE];
     int count = 0;
     while (fgets(line, MAX_LINE, csv_file)) {
-        // °ø¹é ÁÙÀÎ °æ¿ì -1 ¹İÈ¯
+        // ê³µë°± ì¤„ì¸ ê²½ìš° -1 ë°˜í™˜
         if (strlen(line) <= 1)
             return -1;
 
         int comma = 0;
 
-        for (int j = 0; j < strlen(line); j++) { //½°Ç¥ °¹¼ö ¼¼±â
+        for (int j = 0; j < strlen(line); j++) { //ì‰¼í‘œ ê°¯ìˆ˜ ì„¸ê¸°
             if (line[j] == ',') {
                 comma++;
             }
         }
-        if (comma != 4)//,°¡ 4°³°¡ ¾Æ´Ï¸é -1
+        if (comma != 4)//,ê°€ 4ê°œê°€ ì•„ë‹ˆë©´ -1
             return -1;
 
 
@@ -229,7 +229,7 @@ int fileDiagnosis() { //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
         count++;
         num_count = 0;
 
-        //³¯Â¥ Ã¼Å©
+        //ë‚ ì§œ ì²´í¬
         if (change_date(data.startDate) == -1)
             return -1;
         if (change_date(data.endDate) == -1)
@@ -238,19 +238,19 @@ int fileDiagnosis() { //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
             return -1;
     }
 
-    if (check_id() == -1)//¾ÆÀÌµğ Áßº¹ °Ë»ç
+    if (check_id() == -1)//ì•„ì´ë”” ì¤‘ë³µ ê²€ì‚¬
         return -1;
-    if (check_compatable() == -1)//Áø¸®°ª Ã¼Å©
+    if (check_compatable() == -1)//ì§„ë¦¬ê°’ ì²´í¬
         return -1;
 
-    if (check_calandr() == -1)//Áø¸®°ª,³¯Â¥ Áßº¹½Ã Ã¼Å©
+    if (check_calandr() == -1)//ì§„ë¦¬ê°’,ë‚ ì§œ ì¤‘ë³µì‹œ ì²´í¬
         return -1;
 
 
 
     fclose(csv_file);
     return 1;
-} //¹«°á¼º°Ë»ç ½ÇÆĞ½Ã return -1
+} //ë¬´ê²°ì„±ê²€ì‚¬ ì‹¤íŒ¨ì‹œ return -1
 
 int check_compatable() {
 
@@ -276,7 +276,7 @@ int check_id() {
     for (int i = 0; i < num; i++) {
         for (int j = i + 1; j < num; j++) {
             if (((strcmp(data[i].id, data[j].id) == 0))) {
-                return -1; // Áßº¹µÈ °ªÀÌ ÀÖÀ¸¸é -1À» ¹İÈ¯
+                return -1; // ì¤‘ë³µëœ ê°’ì´ ìˆìœ¼ë©´ -1ì„ ë°˜í™˜
             }
         }
     }
