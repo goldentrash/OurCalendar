@@ -1,4 +1,7 @@
-﻿//애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+
+//애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
 int check_compatable();//진리값에 들어가는 문자 점검
 int check_id();//아이디 점검
 int check_special(char* date); //날짜 점검1
