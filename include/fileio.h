@@ -64,10 +64,10 @@ Task* readfile() {
     fclose(csv_file);
 
     return datas;
-}
+} //Task 동적으로 저장
 
 
-void enrollTask(Task newTask) {
+void enrollTask(Task newTask) {//파일 추가
 
     FILE* file = fopen("data.csv", "a");
 
@@ -81,7 +81,7 @@ void enrollTask(Task newTask) {
 
 }
 
-void deleteTask(const char* idA) {
+void deleteTask(const char* idA) {//파일 지우기 아이디 받으면 지음 없으면 아무일 없음
 
     // CSV 파일 열기
     FILE* csv_file = fopen("data.csv", "r");
@@ -142,7 +142,7 @@ void deleteTask(const char* idA) {
 }
 
 
-int TaskCount() {
+int TaskCount() { // Task 갯수 인트 반환
 
     // CSV 파일 열기
     FILE* csv_file = fopen("data.csv", "r");
@@ -164,7 +164,7 @@ int TaskCount() {
 
 
 
-int fileDiagnosis() {
+int fileDiagnosis() { //무결성검사 실패시 return -1
 
     FILE* csv_file = fopen("data.csv", "r");
 
@@ -250,7 +250,7 @@ int fileDiagnosis() {
 
     fclose(csv_file);
     return 1;
-}
+} //무결성검사 실패시 return -1
 
 int check_compatable() {
 
