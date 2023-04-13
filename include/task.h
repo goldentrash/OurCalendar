@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <constants.h>
 
 typedef struct
