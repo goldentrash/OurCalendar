@@ -10,10 +10,17 @@ typedef struct
     char *contents;
 } Task;
 
-void printTask(Task);
-Task findTask(Task *, const *);
-void mkTask(char, char *, char *, char *);
-bool isEqualTask(Task, Task);
-bool isEnrolledTask(char *);
-bool isOverlapped(Task, Task);
-void taskDiagnosis(Task);
+typedef struct
+{
+    Task* tasks;
+    int count;
+} TaskList;
+
+Task mkTask(char, char *, char *, char *);
+int isEqualTask(Task, Task);
+int isEnrolledTask(char *);
+int isOverlapped(Task, Task);
+int taskDiagnosis(Task);
+void printTasks(TaskList);
+TaskList findTasks(char *, char *);
+TaskList findOverlappedTask(char *, char *);
