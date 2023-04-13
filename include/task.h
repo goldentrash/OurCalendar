@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <constants.h>
 
 typedef struct
@@ -12,16 +11,15 @@ typedef struct
 
 typedef struct
 {
-    Task tasks;
+    Task *tasks;
     int count;
 } TaskList;
 
-void printTask(Task,int);
-Task findTask(Task *, const *);
 Task mkTask(char, char *, char *, char *);
 int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
-int taskDiagnosis(Task);
-TaskList findTasks(char*, char*);
-TaskList findOverlappedTask(char*, char*);
+void printTasks(TaskList);
+Task findTask(char *);
+TaskList findTasks(char *, char *);
+TaskList findOverlappedTask(char *, char *);
