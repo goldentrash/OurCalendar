@@ -19,7 +19,6 @@ Task mkTask(char, char *, char *, char *);
 int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
-int taskDiagnosis(Task);
 void printTasks(TaskList);
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
