@@ -15,11 +15,11 @@ typedef struct
     int count;
 } TaskList;
 
-void printTask(Task,int);
 Task mkTask(char, char *, char *, char *);
 int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
+//int taskDiagnosis(Task); fileio에서 구현했으므로 삭제
 void printTasks(TaskList);
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
