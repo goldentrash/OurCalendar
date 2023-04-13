@@ -15,6 +15,7 @@ typedef struct
     int count;
 } TaskList;
 
+void printTask(Task,int);
 Task mkTask(char, char *, char *, char *);
 int isEqualTask(Task, Task);
 int isEnrolledTask(char *);

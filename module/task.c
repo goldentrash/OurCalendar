@@ -21,15 +21,11 @@ typedef struct {
 } TaskList;
 
 // 일정 배열을 terminal에 출력 (userio/printSysMsg활용), n은 배열 일정에서 일정의 개수
-void printTask(Task  *task, int n){
+void printTasks(Task *task, int n){
     for(int i=0;i<n;i++)
     printf("%s/t%c %s~%s\n%s\n",task[i].id,task[i].compatable,task[i].startDate,task[i].endDate,task[i].contents);
 };
 
-//일정 배열 받고 해당하는 일정 반환
-Task findTask(Task *task, const *number){
-    return task[*number];
-};
 
 // 일정 생성 (id 자동 생성)
 Task mkTask(char compatable, char * startDate, char * endDate, char * contents){
@@ -59,12 +55,12 @@ int isEqualTask(Task a, char *id){
     return -1;
 };
 
-//등록된 일정인지 확인 -> 해당 일정이 정말 등록되었는지 확인하기 위한 마지막 절차?? or 삭제할 때 찾는 함수?
+//등록된 일정인지 확인 -> 삭제할 때 찾는 함수
 int isEnrolledTask(char * id){
-    Task* alltaskarray=readFile();
+    Task* alltaskarray=readFile().tasks;
     for(int i=0;i<Taskcount();i++){
         if(isEqualTask(alltaskarray[i],id))
-        return i;// delete에서 활용한다면 등록된 일정이라는 것이 확인되었을때 일정배열에서 해당 일정을 구하기 위해 필요한 인덱스 반환
+        return 1;
     }
     return -1;
 }
@@ -80,9 +76,9 @@ int isOverlapped(Task a, Task b){
 // 일정 유효 검사, 유효한 일정이 아니면 raise exception 언제 사용? 새롭게 저장할 때? 혹은 삭제하려고 할때 제대로 됐는지 확인?
 int taskDiagnosis(Task task){
     if(IdGrammerCheck(task.id)&&isEnrolledTask(task.id)&&CompatableGrammerCheck(task.compatable)&&ContentsGrammerCheck(task.contents)&&DateRuleCheck(task.startDate)&&DateRuleCheck(task.endDate)&&(strcmp(task.startDate,task.endDate)<=0)){
-        if(task.compatable=='Y')
+        if(task.compatable=='Y')// 진리값이 참이면 유효
         return 1;
-        else if(task.compatable=='N'){
+        else if(task.compatable=='N'){ // 진리값이 거짓이면 아래 코드 수행
             TaskList taskList=findOverlappedTask(task.startDate,task.endDate);
             
             for(int i=0;i<taskList.count;i++){
@@ -97,14 +93,12 @@ int taskDiagnosis(Task task){
 
 };
 
-//등록된 모든 일정 반환 -> 승찬이의 readFile()하고 겹치는 것 같습니다
-//Task *findAllTasks(){};
 
 //입력한 기간에 시작하는 모든 등록된 일정 반환 
 TaskList findTasks(char* startDate, char* endDate) {
     int n = 0;
-    Task* alltaskarray = readFile();
-    for (int i = 0; i < TaskCount(); i++) {
+    Task* alltaskarray = readFile().tasks;
+    for (int i = 0; i < readFile().count; i++) {
         if ((strcmp(startDate, alltaskarray[i].startDate) <= 0) &&
             (strcmp(alltaskarray[i].startDate, endDate) <= 0))
             n++;
@@ -118,7 +112,7 @@ TaskList findTasks(char* startDate, char* endDate) {
     Task* taskarray = (Task*)malloc(sizeof(Task) * n);
 
     int j = 0;
-    for (int i = 0; i < TaskCount(); i++) {
+    for (int i = 0; i < readFile().count; i++) {
         if ((strcmp(startDate, alltaskarray[i].startDate) <= 0) &&
             (strcmp(alltaskarray[i].startDate, endDate) <= 0)) {
             taskarray[j] = alltaskarray[i];
@@ -135,8 +129,8 @@ TaskList findTasks(char* startDate, char* endDate) {
 //입력한 기간과 겹치는 등록된 일정을 찾는 함수
 TaskList findOverlappedTask(char* startDate, char* endDate) {
     int n = 0;
-    Task* alltaskarray = readFile();
-    for(int i = 0; i < TaskCount(); i++){
+    Task* alltaskarray = readFile().tasks;
+    for(int i = 0; i < readFile().count; i++){
         if(strcmp(startDate,alltaskarray[i].endDate) >= 0 && strcmp(endDate,alltaskarray[i].startDate) <= 0)
             n++;
     }
@@ -149,7 +143,7 @@ TaskList findOverlappedTask(char* startDate, char* endDate) {
     Task* taskarray = (Task*) malloc(sizeof(Task) * n);
 
     int j = 0;
-    for(int i = 0; i < TaskCount(); i++){
+    for(int i = 0; i < readFile().count; i++){
         if(strcmp(startDate,alltaskarray[i].endDate) >= 0 && strcmp(endDate,alltaskarray[i].startDate) <= 0){
             taskarray[j] = alltaskarray[i];
             j++;
@@ -260,28 +254,8 @@ int CompatableGrammerCheck(char compatable){
     return-1;
 }
 
-//순수문자열을 생성하는 함수 ver1
-char *PureStr() {
-    // 난수 발생을 위한 시드값 설정 
-    srand((unsigned int)time(NULL));
 
-    // 가능한 문자 범위 설정
-    const char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYXZㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㄲㄳㄵㄶㄸㄺㄻㄼㄽㄾㄿㅀㅃㅄㅆㅉㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢ";
-
-    // 문자열 길이도 랜덤? 일단 3으로 지정해놨습니다
-    const int length = 3;
-
-    // 문자열 생성
-    char purestr[length+1];
-    for (int i = 0; i < length; i++) {
-        purestr[i] = charset[rand() % (sizeof(charset) - 1)];
-    }
-    purestr[length] = '\0';
-    
-    return purestr;   
-}
-
-//순수문자열을 생성하는 함수 ver2
+//순수문자열을 생성하는 함수 
 char *PureStr(){
     
     srand(time(NULL));  // 랜덤 시드 초기화
