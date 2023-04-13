@@ -11,7 +11,7 @@ typedef struct
 
 typedef struct
 {
-    Task* tasks;
+    Task *tasks;
     int count;
 } TaskList;
 
@@ -20,5 +20,6 @@ int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
 void printTasks(TaskList);
+Task findTask(char *);
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
