@@ -1,7 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-
-
-//애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
+﻿//애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
 int check_compatable();//진리값에 들어가는 문자 점검
 int check_id();//아이디 점검
 int check_special(char* date); //날짜 점검1
@@ -9,26 +6,19 @@ int check_day(int date); //날짜 점검2
 int change_date(char* date); //날짜 점검3
 int check_calandr();//겹치면 날짜 점검
 
-#define MAX_LINE 1000
+int TaskCount();// 문자열 갯수 세기
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-Task* readfile() {
+TaskList readfile() {
     // CSV 파일 열기
     FILE* csv_file = fopen("data.csv", "r");
 
-    if (csv_file == NULL) {
-        csv_file = fopen("data.csv", "w");
-    }
 
     // CSV 파일에서 데이터 읽기
-    char line[MAX_LINE];
+    char line[1000];
     Task* datas = NULL;
     int i = 0;
     const char* sim = ",";
-    while (fgets(line, MAX_LINE, csv_file)) {
+    while (fgets(line, 1000, csv_file)) {
         // 쉼표로 구분된 데이터를 파싱하여 구조체 필드에 저장
         char* field;
         Task data;
@@ -57,36 +47,43 @@ Task* readfile() {
     // CSV 파일 닫기
     fclose(csv_file);
 
-    return datas;
-} //Task 동적으로 저장
+    TaskList datalink;
+    datalink.tasks = datas;
+    datalink.count = TaskCount();
+
+    return datalink;
+}
 
 
-void enrollTask(Task newTask) {//파일 추가
+void enrollTask(Task newTask) {
 
     FILE* file = fopen("data.csv", "a");
 
     Task fir = newTask;;
 
-    fprintf(file, "\n%s,%c,%s,%s,%s", fir.id, fir.compatable, fir.startDate, fir.endDate, fir.contents);
-
+    if (TaskCount() == 0)
+        fprintf(file, "%s,%c,%s,%s,%s", fir.id, fir.compatable, fir.startDate, fir.endDate, fir.contents);
+    else
+        fprintf(file, "\n%s,%c,%s,%s,%s", fir.id, fir.compatable, fir.startDate, fir.endDate, fir.contents);
 
     // CSV 파일 닫기
     fclose(file);
 
 }
 
-void deleteTask(const char* idA) {//파일 지우기 아이디 받으면 지음 없으면 아무일 없음
+
+void deleteTask(const char* idA) {
 
     // CSV 파일 열기
     FILE* csv_file = fopen("data.csv", "r");
 
     // CSV 파일에서 데이터 읽기
-    char line[MAX_LINE];
+    char line[1000];
     Task* datas = NULL;
     int i = 0;
     const char* sim = ",";
 
-    while (fgets(line, MAX_LINE, csv_file)) {
+    while (fgets(line, 1000, csv_file)) {
         // 쉼표로 구분된 데이터를 파싱하여 구조체 필드에 저장
         char* field;
         Task data;
@@ -118,7 +115,7 @@ void deleteTask(const char* idA) {//파일 지우기 아이디 받으면 지음 
 
     for (int q = 0; q < i - 1; q++) {
         Task row = datas[q];
-        if (!(strcmp(row.id, idA) == NULL)) {
+        if (!(strcmp(row.id, idA) == 0)) {
             fprintf(file, "%s,%c,%s,%s,%s\n", row.id, row.compatable, row.startDate, row.endDate, row.contents);
         }
 
@@ -127,7 +124,7 @@ void deleteTask(const char* idA) {//파일 지우기 아이디 받으면 지음 
 
     Task end = datas[i - 1];
 
-    if (!(strcmp(end.id, idA) == NULL)) {
+    if (!(strcmp(end.id, idA) == 0)) {
         fprintf(file, "%s,%c,%s,%s,%s", end.id, end.compatable, end.startDate, end.endDate, end.contents);
     }
 
@@ -135,18 +132,17 @@ void deleteTask(const char* idA) {//파일 지우기 아이디 받으면 지음 
     fclose(file);
 }
 
-
-int TaskCount() { // Task 갯수 인트 반환
+int TaskCount() {
 
     // CSV 파일 열기
     FILE* csv_file = fopen("data.csv", "r");
 
     // CSV 파일에서 데이터 읽기
-    char line[MAX_LINE];
+    char line[1000];
     Task* datas = NULL;
     int count = 0;
 
-    while (fgets(line, MAX_LINE, csv_file)) {
+    while (fgets(line, 1000, csv_file)) {
         // 쉼표로 구분된 데이터를 파싱하여 구조체 필드에 저장
         char* field;
         field = strtok(line, "\n");
@@ -156,9 +152,7 @@ int TaskCount() { // Task 갯수 인트 반환
     return count;
 }
 
-
-
-int fileDiagnosis() { //무결성검사 실패시 return -1
+int fileDiagnosis() {
 
     FILE* csv_file = fopen("data.csv", "r");
 
@@ -167,9 +161,9 @@ int fileDiagnosis() { //무결성검사 실패시 return -1
     }
 
     int num_count = 0;
-    char line[MAX_LINE];
+    char line[1000];
     int count = 0;
-    while (fgets(line, MAX_LINE, csv_file)) {
+    while (fgets(line, 1000, csv_file)) {
         // 공백 줄인 경우 -1 반환
         if (strlen(line) <= 1)
             return -1;
@@ -189,7 +183,7 @@ int fileDiagnosis() { //무결성검사 실패시 return -1
 
         char* field = strtok(line, ",");
         if (num_count == 0) {
-            if (strlen(field) <= 0)
+            if (strlen(field) <= 0 || strlen(field) > 100)
                 return -1;
         } num_count++;
         data.id = _strdup(field);
@@ -218,6 +212,8 @@ int fileDiagnosis() { //무결성검사 실패시 return -1
         data.endDate = _strdup(field);
 
         field = strtok(NULL, ",");
+        if (strlen(field) > 100)
+            return -1;
         data.contents = _strdup(field);
 
         count++;
@@ -232,28 +228,28 @@ int fileDiagnosis() { //무결성검사 실패시 return -1
             return -1;
     }
 
-    if (check_id() == -1)//아이디 중복 검사
-        return -1;
-    if (check_compatable() == -1)//진리값 체크
+    if (check_id() == -1)
         return -1;
 
-    if (check_calandr() == -1)//진리값,날짜 중복시 체크
+    if (check_compatable() == -1)
         return -1;
 
+    if (check_calandr() == -1)
+        return -1;
 
 
     fclose(csv_file);
     return 1;
-} //무결성검사 실패시 return -1
+}
 
-int check_compatable() {//진리값 체크 실패시 -1리턴
+int check_compatable() {
 
-    Task* data = readfile();
+    TaskList data = readfile();
     int num = TaskCount();
     for (int i = 0; i < num; i++) {
 
-        if (data[i].compatable == 'N') {}
-        else if (data[i].compatable == 'Y') {}
+        if (data.tasks[i].compatable == 'N') {}
+        else if (data.tasks[i].compatable == 'Y') {}
         else
             return -1;
 
@@ -262,14 +258,14 @@ int check_compatable() {//진리값 체크 실패시 -1리턴
 
 }
 
-int check_id() {//아이디 중복 체크 //실패시 -1리턴
+int check_id() {
 
-    Task* data = readfile();
+    TaskList data = readfile();
     int num = TaskCount();
 
     for (int i = 0; i < num; i++) {
         for (int j = i + 1; j < num; j++) {
-            if (((strcmp(data[i].id, data[j].id) == 0))) {
+            if (((strcmp(data.tasks[i].id, data.tasks[j].id) == 0))) {
                 return -1; // 중복된 값이 있으면 -1을 반환
             }
         }
@@ -278,9 +274,8 @@ int check_id() {//아이디 중복 체크 //실패시 -1리턴
 
 }
 
-int check_special(char* date) {//날짜 체크 1
+int check_special(char* date) {
 
-    char temp[100];
     int i, j = 0;
     for (i = 0; i < strlen(date); i++) {
         if (date[i] == '-' || (date[i] >= '0' && date[i] <= '9')) {
@@ -299,7 +294,7 @@ int check_special(char* date) {//날짜 체크 1
 
 }
 
-int check_day(int date) { //날짜 체크 2
+int check_day(int date) {
     int c1 = (date / 100) % 100;
     int c2 = date % 100;
     int c3 = date / 10000;
@@ -341,7 +336,7 @@ int check_day(int date) { //날짜 체크 2
     return 1;
 
 }
-int change_date(char* date) {//날짜 체크 3 애가 최종 애도 실패시 -1리턴
+int change_date(char* date) {
 
     if (check_special(date) == -1)
         return -1;
@@ -361,16 +356,17 @@ int change_date(char* date) {//날짜 체크 3 애가 최종 애도 실패시 -1
             return atoi(temp);
     }
 }
-int check_calandr() { //겹쳐도 되는 일정중 있으면 체크
-    Task* data = readfile();
+
+int check_calandr() {
+    TaskList data = readfile();
     int num = TaskCount();
     for (int i = 0; i < num; i++) {
         for (int j = i + 1; j < num; j++) {
-            if ((data[i].compatable == 'N') || (data[j].compatable == 'N')) {
-                int start_i = change_date(data[i].startDate);
-                int end_i = change_date(data[i].endDate);
-                int start_j = change_date(data[j].startDate);
-                int end_j = change_date(data[j].endDate);
+            if ((data.tasks[i].compatable == 'N') || data.tasks[j].compatable == 'N') {
+                int start_i = change_date(data.tasks[i].startDate);
+                int end_i = change_date(data.tasks[i].endDate);
+                int start_j = change_date(data.tasks[j].startDate);
+                int end_j = change_date(data.tasks[j].endDate);
                 if ((start_i <= start_j && start_j <= end_i) || (start_i <= end_j && end_j <= end_i) || (start_j <= start_i && start_i <= end_j) || (start_j <= end_i && end_i <= end_j)) {
                     return -1;
                 }
