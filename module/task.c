@@ -21,6 +21,9 @@ typedef struct {
 
 char *pureStr();//순수문자열 생성
 
+int isIdEqualTask(Task,char*);// 일정과 id간 동일한 일정인지 확인 (id 기준)
+
+
 // 일정 배열을 terminal에 출력
 void printTasks(TaskList taskList){
     for(int i=0;i<taskList.count;i++)
@@ -40,7 +43,7 @@ Task mkTask(char compatable, char * startDate, char * endDate, char * contents){
 };
 
 
-// 동일한 일정인지 확인 (id 기준)
+// 두 일정 간 동일한 일정인지 확인 (id 기준)
 int isEqualTask(Task a, Task b){ 
     if(strcmp(a.id,b.id)==0)
     return 1;
@@ -49,11 +52,21 @@ int isEqualTask(Task a, Task b){
 };
 
 
+// 일정과 id간 동일한 일정인지 확인 (id 기준)
+int isIdEqualTask(Task a, char *id){ 
+    if(strcmp(a.id,id)==0)
+    return 1;
+    else
+    return -1;
+};
+
+
 //등록된 일정인지 확인 -> 삭제할 때 찾는 함수
 int isEnrolledTask(char * id){
-    Task* alltaskarray=readFile().tasks;
+    
+    Task* alltaskarray = readFile().tasks;
     for(int i=0;i<readFile().count;i++){
-        if(isEqualTask(alltaskarray[i],id)){
+        if(isIdEqualTask(alltaskarray[i],id)){ 
             free(alltaskarray);
             return 1;
         }
@@ -132,6 +145,23 @@ TaskList findOverlappedTask(char* startDate, char* endDate) {
     free(alltaskarray);
     return taskList;
 }
+
+
+// 해당하는 id의 일정 반환
+Task* findTask(char* id) {
+    Task* alltaskarray = readFile().tasks;
+    Task* task = NULL;
+    for (int i = 0; i < readFile().count; i++) {
+        if (isIdEqualTask(alltaskarray[i], id)) {
+            task =(Task*)malloc(sizeof(Task));
+            *task = alltaskarray[i];
+            break;
+        }
+    }
+    free(alltaskarray);
+    return task;
+}
+
 
 //순수문자열을 생성하는 함수 
 char *pureStr(){

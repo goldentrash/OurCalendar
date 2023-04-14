@@ -20,6 +20,6 @@ int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
 void printTasks(TaskList);
-Task findTask(char *);
+Task* findTask(char *);// 해당하는 id의 일정 반환, redaFile() 동적할당 때문에 Task*로 변경
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
