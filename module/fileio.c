@@ -1,5 +1,6 @@
 ﻿#include <fileio.h>
 #include <stdio.h>
+#include <string.h>
 
 // 애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
 int check_compatable();        // 진리값에 들어가는 문자 점검
@@ -11,7 +12,7 @@ int check_calandr();           // 겹치면 날짜 점검
 
 int TaskCount(); // 문자열 갯수 세기
 
-TaskList readfile()
+TaskList readFile()
 {
     // CSV 파일 열기
     FILE *csv_file = fopen("data.csv", "r");
