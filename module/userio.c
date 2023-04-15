@@ -183,7 +183,7 @@ bool isDateStr(const char* str) {
     }
     for (int i = 0; i < len; i++) {
         if (i == 4 || i == 7) {
-            if (str[i] != '-' && str[i] ! == '.' && str[i] !== '/') {
+            if (str[i] != '-' && str[i] != '.' && str[i] != '/') {
                 return false;
             }
         }
