@@ -1,4 +1,5 @@
 #include <userio.h>
+#include <string.h>
 
 // 프롬포트에서 입력받은 내용을 ipt에 저장
 void getUsrIpt(const char* ipt) {
