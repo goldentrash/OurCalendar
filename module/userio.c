@@ -310,7 +310,10 @@ int stepStr(const char* source, int start, Str strType, char* dest)
             j++;
         }
         dest[j] = '\0'; 
-       
+        return i;
+        break;
+        default:
+        break; 
     }
 }
 
