@@ -23,8 +23,6 @@ char *pureStr();//순수문자열 생성
 
 int isIdEqualTask(Task,char*);// 일정과 id간 동일한 일정인지 확인 (id 기준)
 
-const int id_size=3;//id는 2글자+NULL문자
-
 
 // 일정 배열을 terminal에 출력
 void printTasks(TaskList taskList){
@@ -65,9 +63,9 @@ int isIdEqualTask(Task a, char *id){
 
 //등록된 일정인지 확인 -> 삭제할 때 찾는 함수
 int isEnrolledTask(char * id){
-    
-    Task* alltaskarray = readFile().tasks;
-    for(int i=0;i<readFile().count;i++){
+    TaskList taskList = readFile();
+    Task* alltaskarray = taskList.tasks;
+    for(int i=0;i<taskList.count;i++){
         if(isIdEqualTask(alltaskarray[i],id)){ 
             free(alltaskarray);
             return 1;
@@ -89,9 +87,10 @@ int isOverlapped(Task a, Task b){
 
 //입력한 기간에 시작하는 모든 등록된 일정 반환 
 TaskList findTasks(char* startDate, char* endDate) {
+    TaskList taskList = readFile();
     int n = 0;
-    Task* alltaskarray = readFile().tasks;
-    for (int i = 0; i < readFile().count; i++) {
+    Task* alltaskarray = taskList.tasks;
+    for (int i = 0; i < taskList.count; i++) {
         if ((strcmp(startDate, alltaskarray[i].startDate) <= 0) &&
             (strcmp(alltaskarray[i].startDate, endDate) <= 0))
             n++;
@@ -105,7 +104,7 @@ TaskList findTasks(char* startDate, char* endDate) {
     Task* taskarray = (Task*)malloc(sizeof(Task) * n);
 
     int j = 0;
-    for (int i = 0; i < readFile().count; i++) {
+    for (int i = 0; i < taskList.count; i++) {
         if ((strcmp(startDate, alltaskarray[i].startDate) <= 0) &&
             (strcmp(alltaskarray[i].startDate, endDate) <= 0)) {
             taskarray[j] = alltaskarray[i];
@@ -113,17 +112,18 @@ TaskList findTasks(char* startDate, char* endDate) {
         }
     }
 
-    TaskList taskList = { .tasks = taskarray, .count = n };
+    TaskList sttaskList = { .tasks = taskarray, .count = n };
     free(alltaskarray);
-    return taskList;
+    return sttaskList;
 }
 
 
 //입력한 기간과 겹치는 등록된 일정을 찾는 함수
 TaskList findOverlappedTask(char* startDate, char* endDate) {
+    TaskList taskList =readFile();
     int n = 0;
-    Task* alltaskarray = readFile().tasks;
-    for(int i = 0; i < readFile().count; i++){
+    Task* alltaskarray = taskList.tasks;
+    for(int i = 0; i < taskList.count; i++){
         if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0)
             n++;
     }
@@ -133,34 +133,33 @@ TaskList findOverlappedTask(char* startDate, char* endDate) {
         return (TaskList){ .tasks = NULL, .count = 0 };
     }
 
-    Task* taskarray = (Task*) malloc(sizeof(Task) * n);
+    Task* taskarray = (Task*) malloc(sizeof(Task) * n); 
 
     int j = 0;
-    for(int i = 0; i < readFile().count; i++){
+    for(int i = 0; i < taskList.count; i++){
         if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0){ 
             taskarray[j] = alltaskarray[i];
             j++;
         }
     }
    
-    TaskList taskList = { .tasks = taskarray, .count = n };
+    TaskList overlappedtaskList = { .tasks = taskarray, .count = n };
     free(alltaskarray);
-    return taskList;
+    return overlappedtaskList;
 }
 
 
 // 해당하는 id의 일정 반환
-Task* findTask(char* id) {
-    Task* alltaskarray = readFile().tasks;
-    Task* task = NULL;
-    for (int i = 0; i < readFile().count; i++) {
+Task findTask(char* id) {
+    TaskList taskList = readFile();
+    Task* alltaskarray = taskList.tasks;
+    Task task ={0};
+    for (int i = 0; i < taskList.count; i++) {
         if (isIdEqualTask(alltaskarray[i], id)) {
-            task =(Task*)malloc(sizeof(Task)); // 동적할당
-            *task = alltaskarray[i];
-            break;
+            task = alltaskarray[i];
+            return task;
         }
     }
-    free(alltaskarray);
     return task;
 }
 
