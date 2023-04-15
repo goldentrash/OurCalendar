@@ -1,7 +1,49 @@
-#include "userio.h"
+#include <userio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+
+bool isDateStr(const char *str)
+{
+    int len = strlen(str);
+    if (len != 10)
+    {
+        return false;
+    }
+    for (int i = 0; i < len; i++)
+    {
+        if (i == 4 || i == 7)
+        {
+            if (str[i] != '-' && str[i] != '.' && str[i] != '/')
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!isdigit(str[i]))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool isBooleanStr(const char *str)
+{
+    int len = strlen(str);
+    if (len != 1)
+    {
+        return false;
+    }
+    char c = str[0];
+    if (c == 'Y' || c == 'N')
+    {
+        return true;
+    }
+    return false;
+}
 
 // 프롬포트에서 입력받은 내용을 ipt에 저장
 void getUsrIpt(const char *ipt)
@@ -240,45 +282,4 @@ int dateCmpr(const char *date1, const char *date2)
             }
         }
     }
-}
-bool isDateStr(const char *str)
-{
-    int len = strlen(str);
-    if (len != 10)
-    {
-        return false;
-    }
-    for (int i = 0; i < len; i++)
-    {
-        if (i == 4 || i == 7)
-        {
-            if (str[i] != '-' && str[i] != '.' && str[i] != '/')
-            {
-                return false;
-            }
-        }
-        else
-        {
-            if (!isdigit(str[i]))
-            {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool isBooleanStr(const char *str)
-{
-    int len = strlen(str);
-    if (len != 1)
-    {
-        return false;
-    }
-    char c = str[0];
-    if (c == 'Y' || c == 'N')
-    {
-        return true;
-    }
-    return false;
 }

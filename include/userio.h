@@ -1,3 +1,6 @@
+#ifndef _MYHEADER_H3
+#define _MYHEADER_H3
+
 void getUsrIpt(const char *);
 void printSysMsg(const char *);
 
@@ -30,3 +33,5 @@ Str strType(const char *);
 
 int stepStr(const char *, int, Str, const char *);
 int dateCmpr(const char *, const char *);
+
+#endif

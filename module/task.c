@@ -5,21 +5,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-typedef struct
-{
-    char *id;
-    char compatable;
-    char *startDate;
-    char *endDate;
-    char *contents;
-} Task;
-
-typedef struct
-{
-    Task *tasks;
-    int count;
-} TaskList;
-
 char *pureStr(); // 순수문자열 생성
 
 int isIdEqualTask(Task, char *); // 일정과 id간 동일한 일정인지 확인 (id 기준)

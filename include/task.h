@@ -1,5 +1,8 @@
 #include <constants.h>
 
+#ifndef _MYHEADER_H2
+#define _MYHEADER_H2
+
 typedef struct
 {
     char *id;
@@ -23,3 +26,5 @@ void printTasks(TaskList);
 Task findTask(char *); // 입력한 id의 해당 일정 반환
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
+
+#endif

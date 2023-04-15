@@ -1,5 +1,8 @@
 #include <userio.h>
 
+#ifndef _MYHEADER_H1
+#define _MYHEADER_H1
+
 typedef enum
 {
     Help,
@@ -16,3 +19,5 @@ void help(const char *);
 void add(const char *);
 void del(const char *);
 void search(const char *);
+
+#endif
