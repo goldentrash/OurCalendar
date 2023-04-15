@@ -31,7 +31,7 @@ typedef enum
 } Str;
 Str strType(const char *);
 
-int stepStr(const char *, int, Str, const char *);
+int stepStr(const char *, int, Str, char *);
 int dateCmpr(const char *, const char *);
 
 #endif

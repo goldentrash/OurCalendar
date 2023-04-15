@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-bool isDateStr(const char* str)
+bool isDateStr(const char *str)
 {
     int len = strlen(str);
     if (len != 10)
@@ -30,7 +30,7 @@ bool isDateStr(const char* str)
     return true;
 }
 
-bool isBooleanStr(const char* str)
+bool isBooleanStr(const char *str)
 {
     int len = strlen(str);
     if (len != 1)
@@ -46,19 +46,19 @@ bool isBooleanStr(const char* str)
 }
 
 // 프롬포트에서 입력받은 내용을 ipt에 저장
-void getUsrIpt(const char* ipt)
+void getUsrIpt(const char *ipt)
 {
     scanf("%s", ipt);
 }
 
 // msg를 terminal에 출력
-void printSysMsg(const char* msg)
+void printSysMsg(const char *msg)
 {
     printf("%s\n", msg);
 };
 
 // 문자 유형을 구분 (개행 문자 때문에 배열을 입력으로 받음)
-Chr chrType(const char* chr)
+Chr chrType(const char *chr)
 {
     unsigned char c = chr[0];
     if (c <= 0x7F)
@@ -145,7 +145,7 @@ Chr chrType(const char* chr)
 }
 
 // 문자열 유형을 구분
-Str strType(const char* str)
+Str strType(const char *str)
 {
     int len = strlen(str);
     if (len == 0 || len > 100)
@@ -231,7 +231,7 @@ Str strType(const char* str)
 
 // source 문자열의 start부터 strType을 읽고 dest에 저장한다.
 // 찾은 문자열의 길이를 반환한다.
-int stepStr(const char* source, int start, Str strType, char* dest)
+int stepStr(const char *source, int start, Str strType, char *dest)
 {
     int i = start;
     int j = 0;
@@ -248,41 +248,41 @@ int stepStr(const char* source, int start, Str strType, char* dest)
         return i;
         break;
     case NonLnBrkStr:
-      
+
         while (source[i] != '\n' && source[i] != '\r' && source[i] != '\0')
         {
             dest[j] = source[i];
             i++;
             j++;
         }
-        dest[j] = '\0'; 
-      
+        dest[j] = '\0';
+
         return i;
         break;
     case OneLnStr:
-        
+
         while (!(source[i] == '\n' && source[i + 1] == '\n') && source[i] != '\0')
         {
             dest[j] = source[i];
             i++;
             j++;
         }
-        dest[j] = '\0'; 
+        dest[j] = '\0';
         break;
     case LnBrkStr:
-        
+
         while (source[i] != '\n' && source[i] != '\r' && source[i] != '\0')
         {
             dest[j] = source[i];
             i++;
             j++;
         }
-        dest[j] = '\0'; 
+        dest[j] = '\0';
         return i + 1;
         break;
     case PureStr:
-       
-        while (!isspace(source[i]) && source[i] != '\n' && source[i] != '\r' && source[i] != '\0'&&source[i] != '-' &&source[i] != '/' &&source[i] != '.')
+
+        while (!isspace(source[i]) && source[i] != '\n' && source[i] != '\r' && source[i] != '\0' && source[i] != '-' && source[i] != '/' && source[i] != '.')
         {
             dest[j] = source[i];
             i++;
@@ -292,32 +292,32 @@ int stepStr(const char* source, int start, Str strType, char* dest)
         return i;
         break;
     case SpecialStr:
-        
-        while (!isspace(source[i]) && source[i] != '\n' && source[i] != '\r' && source[i] != '\0'')
+
+        while (!isspace(source[i]) && source[i] != '\n' && source[i] != '\r' && source[i] != '\0')
         {
             dest[j] = source[i];
             i++;
             j++;
         }
-        dest[j] = '\0'; 
+        dest[j] = '\0';
         return i;
         break;
     case DateStr:
-        while (isdigit(source[i]) || source[i] == '-' || source[i] == '/' ||source[i]=='.')
+        while (isdigit(source[i]) || source[i] == '-' || source[i] == '/' || source[i] == '.')
         {
             dest[j] = source[i];
             i++;
             j++;
         }
-        dest[j] = '\0'; 
+        dest[j] = '\0';
         return i;
         break;
-        default:
-        break; 
+    default:
+        break;
     }
 }
 
-int dateCmpr(const char* date1, const char* date2)
+int dateCmpr(const char *date1, const char *date2)
 {
     int year1, year2, month1, month2, day1, day2;
     char delimiter;
