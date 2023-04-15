@@ -28,19 +28,19 @@ TaskList readFile()
         char *field;
         Task data;
         field = strtok(line, sim);
-        data.id = _strdup(field);
+        data.id = strdup(field);
 
         field = strtok(NULL, sim);
         data.compatable = field[0];
 
         field = strtok(NULL, sim);
-        data.startDate = _strdup(field);
+        data.startDate = strdup(field);
 
         field = strtok(NULL, sim);
-        data.endDate = _strdup(field);
+        data.endDate = strdup(field);
 
         field = strtok(NULL, "\n");
-        data.contents = _strdup(field);
+        data.contents = strdup(field);
 
         // 구조체 배열에 추가
         datas = realloc(datas, (i + 1) * sizeof(Task));
@@ -92,19 +92,19 @@ void deleteTask(const char *idA)
         char *field;
         Task data;
         field = strtok(line, sim);
-        data.id = _strdup(field);
+        data.id = strdup(field);
 
         field = strtok(NULL, sim);
         data.compatable = field[0];
 
         field = strtok(NULL, sim);
-        data.startDate = _strdup(field);
+        data.startDate = strdup(field);
 
         field = strtok(NULL, sim);
-        data.endDate = _strdup(field);
+        data.endDate = strdup(field);
 
         field = strtok(NULL, "\n");
-        data.contents = _strdup(field);
+        data.contents = strdup(field);
 
         // 구조체 배열에 추가
         datas = realloc(datas, (i + 1) * sizeof(Task));
@@ -196,7 +196,7 @@ int fileDiagnosis()
                 return -1;
         }
         num_count++;
-        data.id = _strdup(field);
+        data.id = strdup(field);
 
         field = strtok(NULL, ",");
         if (num_count == 1)
@@ -216,7 +216,7 @@ int fileDiagnosis()
         }
         num_count++;
 
-        data.startDate = _strdup(field);
+        data.startDate = strdup(field);
 
         field = strtok(NULL, ",");
         if (num_count == 3)
@@ -225,12 +225,12 @@ int fileDiagnosis()
                 return -1;
         }
         num_count++;
-        data.endDate = _strdup(field);
+        data.endDate = strdup(field);
 
         field = strtok(NULL, ",");
         if (strlen(field) > 100)
             return -1;
-        data.contents = _strdup(field);
+        data.contents = strdup(field);
 
         count++;
         num_count = 0;
@@ -259,7 +259,7 @@ int fileDiagnosis()
 
 int check_compatable()
 {
-    TaskList data = readfile();
+    TaskList data = readFile();
     int num = TaskCount();
     for (int i = 0; i < num; i++)
     {
@@ -278,7 +278,7 @@ int check_compatable()
 
 int check_id()
 {
-    TaskList data = readfile();
+    TaskList data = readFile();
     int num = TaskCount();
 
     for (int i = 0; i < num; i++)
@@ -396,7 +396,7 @@ int change_date(char *date)
 
 int check_calandr()
 {
-    TaskList data = readfile();
+    TaskList data = readFile();
     int num = TaskCount();
     for (int i = 0; i < num; i++)
     {

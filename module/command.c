@@ -195,7 +195,7 @@ int parseParameters(const char *usrIpt, const Str *cmdSyntax, const int syntaxLe
         now += nxt;
     }
 
-    if (strLen(usrIpt) > now)
+    if (strlen(usrIpt) > now)
         return -1;
 
     return 1;
