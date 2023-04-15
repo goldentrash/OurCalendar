@@ -2,9 +2,14 @@
 #include <command.h>
 #include <constants.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <fileio.h>
 
 int main()
 {
+    if (fileDiagnosis() == -1)
+        exit(1);
+
     char usrIpt[INP_LIMIT];
     while (true)
     {
