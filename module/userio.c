@@ -14,40 +14,70 @@ void printSysMsg(const char* msg) {
 };
 
 // 문자 유형을 구분 (개행 문자 때문에 배열을 입력으로 받음)
-Chr chrType(const char* chr) {
-    char c = chr[0];
-    if (c >= '0' && c <= '9') {
-        return NumChr;
+chrType chrType(const char* chr) {
+    unsigned char c = chr[0];
+    if (c <= 0x7F) {
+        if (c >= '0' && c <= '9') {
+            return NumChr;
+        }
+        else if (c >= 'a' && c <= 'z') {
+            return AlphChr;
+        }
+        else if (c >= 'A' && c <= 'Z') {
+            return AlphChr;
+        }
+        else if (c == ' ') {
+            return SpaceChr;
+        }
+        else if (c == '\n') {
+            return LnBrkChr;
+        }
+        else if (c == '.' || c == '-' || c == '/') {
+            return SpecialChr;
+        }
+        else if (c == '\t') {
+            return SpaceChr;
+        }
+        else if (c == '\r') {
+            return LnBrkChr;
+        }
+        else {
+            return NotChr;
+        }
     }
-    else if (c >= 'a' && c <= 'z') {
-        return AlphChr;
+    else if ((c & 0xE0) == 0xC0) {
+        // 2byte UTF-8 
+        if ((unsigned char)(chr[1] & 0xC0) != 0x80) {
+            return NotChr;
+        }
+        unsigned char c2 = chr[1];
+        if (((c & 0x1F) == 0xE) && ((c2 & 0x20) == 0)) {
+            return KorChr;
+        }
+        else {
+            return NotChr;
+        }
     }
-    else if (c >= 'A' && c <= 'Z') {
-        return AlphChr;
+    else if ((c & 0xF0) == 0xE0) {
+        // 3byte UTF-8 
+        if ((unsigned char)(chr[1] & 0xC0) != 0x80 ||
+            (unsigned char)(chr[2] & 0xC0) != 0x80) {
+            return NotChr;
+        }
+        return KorChr;
     }
-    else if (c == ' ') {
-        return SpaceChr;
-    }
-    else if (c == '\n') {
-        return LnBrkChr;
-    }
-    else if (c == '.' || c == '-' || c == '/') {
-        return SpecialChr;
-    }
-    else if (c == '\t') {
-        return SpaceChr;
-    }
-    else if (c == '\r') {
-        return LnBrKChr;
-    }
-    else if (c & 0x80 != 0) {
+    else if ((c & 0xF8) == 0xF0) {
+        // 4byte UTF-8 
+        if ((unsigned char)(chr[1] & 0xC0) != 0x80 ||
+            (unsigned char)(chr[2] & 0xC0) != 0x80 ||
+            (unsigned char)(chr[3] & 0xC0) != 0x80) {
+            return NotChr;
+        }
         return KorChr;
     }
     else {
         return NotChr;
     }
-
-	
 }
 
 // 문자열 유형을 구분
