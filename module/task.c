@@ -23,6 +23,8 @@ char *pureStr();//순수문자열 생성
 
 int isIdEqualTask(Task,char*);// 일정과 id간 동일한 일정인지 확인 (id 기준)
 
+const int id_size=3;//id는 2글자+NULL문자
+
 
 // 일정 배열을 terminal에 출력
 void printTasks(TaskList taskList){
@@ -35,9 +37,9 @@ void printTasks(TaskList taskList){
 Task mkTask(char compatable, char * startDate, char * endDate, char * contents){
     Task task;
     task.compatable=compatable;
-    task.startDate=starDate;
+    task.startDate=startDate;
     task.endDate=endDate;
-    taxk.contents=contents;
+    task.contents=contents;
     task.id= pureStr();//길이 2의 순수문자열(한글, 알파벳, 숫자)
     return task;
 };
@@ -52,7 +54,7 @@ int isEqualTask(Task a, Task b){
 };
 
 
-// 일정과 id간 동일한 일정인지 확인 (id 기준)
+// 일정과 id간 동일한 일정인지 확인
 int isIdEqualTask(Task a, char *id){ 
     if(strcmp(a.id,id)==0)
     return 1;
@@ -79,7 +81,7 @@ int isEnrolledTask(char * id){
 // 일정이 겹치는지 확인
 int isOverlapped(Task a, Task b){
     if((strcmp(a.startDate,b.endDate) <=0) && (strcmp(a.endDate,b.startDate)>=0))
-    return 1;
+    return 1;// 겹치면 1 반환
     else
     return -1;    
 };
@@ -122,7 +124,7 @@ TaskList findOverlappedTask(char* startDate, char* endDate) {
     int n = 0;
     Task* alltaskarray = readFile().tasks;
     for(int i = 0; i < readFile().count; i++){
-        if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0)//함수로 대체
+        if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0)
             n++;
     }
 
@@ -135,7 +137,7 @@ TaskList findOverlappedTask(char* startDate, char* endDate) {
 
     int j = 0;
     for(int i = 0; i < readFile().count; i++){
-        if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0){ // 함수로 대체
+        if(strcmp(startDate,alltaskarray[i].endDate) <= 0 && strcmp(endDate,alltaskarray[i].startDate) >= 0){ 
             taskarray[j] = alltaskarray[i];
             j++;
         }
@@ -153,7 +155,7 @@ Task* findTask(char* id) {
     Task* task = NULL;
     for (int i = 0; i < readFile().count; i++) {
         if (isIdEqualTask(alltaskarray[i], id)) {
-            task =(Task*)malloc(sizeof(Task));
+            task =(Task*)malloc(sizeof(Task)); // 동적할당
             *task = alltaskarray[i];
             break;
         }
@@ -164,35 +166,49 @@ Task* findTask(char* id) {
 
 
 //순수문자열을 생성하는 함수 
-char *pureStr(){
-    
-    char* str = (char*)malloc(sizeof(char) * 3); // 2글자 + NULL 문자
-    
-    srand(time(NULL));  // 랜덤 시드 초기화
-    
+char* pureStr() {
+    char* purestr = (char*) malloc(3); // 2글자 + NULL 문자를 위한 3바이트 할당
+    srand(time(NULL)); // 랜덤 시드 초기화
     for (int i = 0; i < 2; i++) {
-        int type = rand() % 3;  // 0 ~ 2 중 하나의 숫자를 랜덤하게 선택
-
+        int type = rand() % 3; // 0 ~ 2 중 하나의 숫자를 랜덤하게 선택
+        int num = rand() % 6;
         switch (type) {
-            case 0:  // 숫자 선택
-                purestr[i] = rand() % 10 + '0';
+        case 0: // 숫자 선택
+            purestr[i] = rand() % 10 + '0';
+            break;
+        case 1: // 영어 알파벳 선택
+            if (rand() % 2 == 0) {
+                purestr[i] = rand() % 26 + 'a'; // 소문자 선택
+            }
+            else {
+                purestr[i] = rand() % 26 + 'A'; // 대문자 선택
+            }
+            break;
+        case 2: // 한글 선택
+            switch (num) {
+            case 0: //한글 닿소리, 홀소리 조합 선택
+                purestr[i] = 0xAC00 + rand() % (0xD7A3 - 0xAC00 + 1);
                 break;
-            case 1:  // 영어 알파벳 선택
-                if (rand() % 2 == 0) {
-                    puestr[i] = rand() % 26 + 'a';  // 소문자 선택
-                } else {
-                    purestr[i] = rand() % 26 + 'A';  // 대문자 선택
-                }
+            case 1: // 한글 홀소리
+                purestr[i] = 0x1161 + rand() % (0x1175 - 0x1161 + 1);
                 break;
-            case 2:  // 한글 선택
-                if(rand()%4==0)
-                
-                purestr[i] = 0xAC00 + rand() % (0xD7A3 - 0xAC00 + 1);  //한글 자음, 모음의 조합 선택
+            case 2: // 한글 닿소리
+                purestr[i] = 0x11A8 + rand() % (0x11C2 - 0X11A8 + 1);
                 break;
+            case 3: // ㄸ
+                purestr[i] = 0X1104;
+                break;
+            case 4: // ㅃ
+                purestr[i] = 0X1108;
+                break;
+            case 5: //ㅉ
+                purestr[i] = 0X110D;
+                break;
+            }
+            break;
         }
     }
-    purestr[2] = '\0';  // 문자열 끝에 NULL 문자 추가
-
+    purestr[2] = '\0'; // 문자열 끝에 NULL 문자 추가
     return purestr;
 }
 
