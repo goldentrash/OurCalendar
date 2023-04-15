@@ -49,11 +49,158 @@ Chr chrType(const char* chr) {
 
 // 문자열 유형을 구분
 Str strType(const char * str){
-  return 1;
+  int len = strlen(str);
+    if (len == 0 || len > 100) {
+        return NotStr;
+    }
+    int numCount = 0;
+    int spaceCount = 0;
+    int wordCount = 0;
+    int specialCount = 0;
+    int lnBrkCount = 0;
+
+    for (int i = 0; i < len; i++) {
+    
+        Chr cType = chrType(&str[i]);
+        switch (cType) {
+        case NumChr:
+            numCount++;
+            break;
+        case AlphChr:
+            wordCount++;
+            break;
+        case SpaceChr:
+            spaceCount++;
+            break;
+        case SpecialChr:
+            specialCount++;
+            break;
+        case LnBrkChr:
+            lnBrkCount++;
+            break;
+        case KorChr:
+            wordCount++;
+            break;
+        default:
+            break;
+        }
+       
+    }
+
+
+
+    if (lnBrkCount == 0)
+    {
+        return NonLnBrkStr;
+    }
+    else if (lnBrkCount == 1 && wordCount+specialCount+spaceCount+numCount == len - 1) 
+    {
+        return OneLnStr;
+    }
+    else if (wordCount+numCount == len) 
+    {
+        return PureStr;
+    }
+    else if (len == spaceCount)
+    {
+        return SpaceStr;
+    }
+    else if (lnBrkCount ==1 && spaceCount == len - 1)
+    {
+        return LnBrkStr;
+    }
+    else if (wordCount+numCount+specialCount == len)
+    {
+        return SpecialStr;
+    }
+    else if (lnBrkCount > 1) 
+    {
+        return NotStr;
+    }
+    else if(isDateStr(str))
+    {
+        return DateStr;
+    }
+    else if (isBooleanStr(str)) {
+        return BooleanStr;
+    }
+    else {
+        return NotStr;
+    }
 }
+
 
 // source 문자열의 start부터 strType을 읽고 dest에 저장한다.
 // 찾은 문자열의 길이를 반환한다.
 int stepStr(const char * source, int start, Str strType, const char * dest){
 
+}
+
+int dateCmpr(const char*, const char*) {
+    int year1, year2, month1, month2, day1, day2;
+    char delimiter;
+
+    if (!isDateStr(date1) || !isDateStr(date2)) {
+        return -2;  /* 날짜 문자열아님*/
+    }
+
+    sscanf(date1, "%d%c%d%c%d", &year1, &delimiter, &month1, &delimiter, &day1);
+    sscanf(date2, "%d%c%d%c%d", &year2, &delimiter, &month2, &delimiter, &day2);
+
+    if (year1 < year2) {
+        return 1;
+    }
+    else if (year1 > year2) {
+        return -1;
+    }
+    else {
+        if (month1 < month2) {
+            return 1;
+        }
+        else if (month1 > month2) {
+            return -1;
+        }
+        else {
+            if (day1 < day2) {
+                return 1;
+            }
+            else if (day1 > day2) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+}
+bool isDateStr(const char* str) {
+    int len = strlen(str);
+    if (len != 10) {
+        return false;
+    }
+    for (int i = 0; i < len; i++) {
+        if (i == 4 || i == 7) {
+            if (str[i] != '-' && str[i] ! == '.' && str[i] !== '/') {
+                return false;
+            }
+        }
+        else {
+            if (!isdigit(str[i])) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool isBooleanStr(const char* str) {
+    int len = strlen(str);
+    if (len != 1) {  
+        return false;
+    }
+    char c = str[0];
+    if (c == 'Y' || c == 'N') { 
+        return true;
+    }
+    return false;
 }
