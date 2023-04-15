@@ -3,9 +3,11 @@
 #include <constants.h>
 #include <stdbool.h>
 
-int main() {
+int main()
+{
     char usrIpt[INP_LIMIT];
-    while(true){
+    while (true)
+    {
         getUsrIpt(usrIpt);
 
         switch (cmdType(usrIpt))
@@ -22,7 +24,7 @@ int main() {
         case Quit:
             return 0;
         case Help:
-        default :
+        default:
             help(usrIpt);
             break;
         }

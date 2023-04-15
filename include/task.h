@@ -20,6 +20,6 @@ int isEqualTask(Task, Task);
 int isEnrolledTask(char *);
 int isOverlapped(Task, Task);
 void printTasks(TaskList);
-Task findTask(char *);// 입력한 id의 해당 일정 반환
+Task findTask(char *); // 입력한 id의 해당 일정 반환
 TaskList findTasks(char *, char *);
 TaskList findOverlappedTask(char *, char *);
