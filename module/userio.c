@@ -169,7 +169,7 @@ int stepStr(const char * source, int start, Str strType, const char * dest){
 
 }
 
-int dateCmpr(const char*, const char*) {
+int dateCmpr(const char* date1, const char* date2) {
     int year1, year2, month1, month2, day1, day2;
     char delimiter;
 
