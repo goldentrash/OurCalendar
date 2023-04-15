@@ -14,7 +14,7 @@ void printSysMsg(const char* msg) {
 };
 
 // 문자 유형을 구분 (개행 문자 때문에 배열을 입력으로 받음)
-chrType chrType(const char* chr) {
+Chr chrType(const char* chr) {
     unsigned char c = chr[0];
     if (c <= 0x7F) {
         if (c >= '0' && c <= '9') {
