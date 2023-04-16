@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include <stdlib.h>
 
 char *pureStr(); // 순수문자열 생성

@@ -1,6 +1,7 @@
 ﻿#include <fileio.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // 애네들은 무결성 검사시 필요한 애들 다 실패시 return  -1 애네들은 주석 제대로 안해놓고 나만 쓸거 같음
 int check_compatable();        // 진리값에 들어가는 문자 점검
