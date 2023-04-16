@@ -169,8 +169,7 @@ char *pureStr()
     srand(time(NULL));                 // 랜덤 시드 초기화
     for (int i = 0; i < 2; i++)
     {
-        int type = rand() % 3; // 0 ~ 2 중 하나의 숫자를 랜덤하게 선택
-        int num = rand() % 6;
+        int type = rand() % 2; // 0 ~ 1 중 하나의 숫자를 랜덤하게 선택
         switch (type)
         {
         case 0: // 숫자 선택
@@ -186,29 +185,7 @@ char *pureStr()
                 purestr[i] = rand() % 26 + 'A'; // 대문자 선택
             }
             break;
-        case 2: // 한글 선택
-            switch (num)
-            {
-            case 0: // 한글 닿소리, 홀소리 조합 선택
-                purestr[i] = 0xAC00 + rand() % (0xD7A3 - 0xAC00 + 1);
-                break;
-            case 1: // 한글 홀소리
-                purestr[i] = 0x1161 + rand() % (0x1175 - 0x1161 + 1);
-                break;
-            case 2: // 한글 닿소리
-                purestr[i] = 0x11A8 + rand() % (0x11C2 - 0X11A8 + 1);
-                break;
-            case 3: // ㄸ
-                purestr[i] = 0X1104;
-                break;
-            case 4: // ㅃ
-                purestr[i] = 0X1108;
-                break;
-            case 5: // ㅉ
-                purestr[i] = 0X110D;
-                break;
-            }
-            break;
+           
         }
     }
     purestr[2] = '\0'; // 문자열 끝에 NULL 문자 추가
