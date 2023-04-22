@@ -49,7 +49,7 @@ bool isBooleanStr(const char *str)
 // 프롬포트에서 입력받은 내용을 ipt에 저장
 void getUsrIpt(const char *ipt)
 {
-    scanf("%s", ipt);
+    fgets("%s", ipt);
 }
 
 // msg를 terminal에 출력
@@ -246,7 +246,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
-        return i;
+        return i-start;
         break;
     case NonLnBrkStr:
 
@@ -258,7 +258,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
         }
         dest[j] = '\0';
 
-        return i;
+        return i-start;
         break;
     case OneLnStr:
 
@@ -269,6 +269,8 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
+            
+        return i-start;
         break;
     case LnBrkStr:
 
@@ -279,7 +281,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
-        return i + 1;
+        return i-start;
         break;
     case PureStr:
 
@@ -290,7 +292,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
-        return i;
+        return i-start;
         break;
     case SpecialStr:
 
@@ -301,7 +303,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
-        return i;
+        return i-start;
         break;
     case DateStr:
         while (isdigit(source[i]) || source[i] == '-' || source[i] == '/' || source[i] == '.')
@@ -311,7 +313,7 @@ int stepStr(const char *source, int start, Str strType, char *dest)
             j++;
         }
         dest[j] = '\0';
-        return i;
+        return i-start;
         break;
     default:
         break;
