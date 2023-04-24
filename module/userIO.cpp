@@ -41,13 +41,13 @@ bool isSpecialChar(const wchar_t c)
 };
 bool isNumChar(const wchar_t c)
 {
-    return c >= 0 && c <= 9;
+    return c >= '0' && c <= '9';
 };
 bool isDateStr(const std::wstring str)
 {
     if (str.length() != 10)
         return false;
-    if (!(isSpaceChar(str[4]) && isSpaceChar(str[7])))
+    if (!(isSpecialChar(str[4]) && isSpecialChar(str[7])))
         return false;
 
     std::wstring year = stepStr(str, 0, NUM);
@@ -63,7 +63,7 @@ bool isDateStr(const std::wstring str)
 
     if (year.compare(L"2000") < 0 || year.compare(L"2040") > 0 ||
         month.compare(L"01") < 0 || month.compare(L"12") > 0 ||
-        day.compare(L"01") < 0 || std::stoi(day) > dayLimit[std::stoi(day)])
+        day.compare(L"01") < 0 || std::stoi(day) > dayLimit[std::stoi(month) - 1])
         return false;
 
     return true;
@@ -114,3 +114,26 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
         throw "wrong string type";
     }
 };
+
+int dateCompare(std::wstring a, std::wstring b)
+{
+    if (!(isDateStr(a) && isDateStr(b)))
+        throw "wrong date format";
+
+    int yearA = std::stoi(a.substr(0, 4)),
+        yearB = std::stoi(b.substr(0, 4));
+    if (yearA != yearB)
+        return (yearA > yearB) ? -1 : 1;
+
+    int monthA = std::stoi(a.substr(5, 2)),
+        monthB = std::stoi(b.substr(5, 2));
+    if (monthA != monthB)
+        return (monthA > monthB) ? -1 : 1;
+
+    int dayA = std::stoi(a.substr(8, 2)),
+        dayB = std::stoi(b.substr(8, 2));
+    if (dayA != dayB)
+        return (dayA > dayB) ? -1 : 1;
+
+    return 0;
+}
