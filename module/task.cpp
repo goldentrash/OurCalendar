@@ -63,6 +63,12 @@ std::wstring toString(task t)
            t.startDate + L"," + t.endDate + L"," + t.contents;
 }
 
+void printTask(task t)
+{
+    printSysMsg(t.id + L"\t" + t.compatable + L" " + t.startDate + L" ~ " + t.endDate);
+    printSysMsg(t.contents);
+}
+
 bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
 {
     return std::find_if(registeredTasks.begin(), registeredTasks.end(),
@@ -74,4 +80,14 @@ bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
                             else
                                 return false;
                         }) != registeredTasks.end();
+}
+
+std::list<task> startingTasksWithinPeriod(std::list<task> registeredTasks, std::wstring startDate, std::wstring endDate)
+{
+    std::list<task> tasks;
+    for (task t : registeredTasks)
+        if (!(dateCompare(startDate, t.startDate) == -1 || dateCompare(t.startDate, endDate) == -1))
+            tasks.push_back(t);
+
+    return tasks;
 }

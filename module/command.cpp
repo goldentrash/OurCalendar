@@ -62,7 +62,7 @@ void add(std::wstring userInput)
         newTask.startDate = parameters[2];
         newTask.endDate = parameters[4];
 
-        if (dateCompare(newTask.startDate,  newTask.endDate) == -1)
+        if (dateCompare(newTask.startDate, newTask.endDate) == -1)
             throw L"시작 날짜가 종료 날짜보다 늦습니다.";
 
         std::list<task> registeredTasks = readTasks();
@@ -90,6 +90,94 @@ void add(std::wstring userInput)
     {
         printSysMsg(err);
         return;
+    }
+}
+
+void del(std::wstring userInput)
+{
+    std::vector<StringType> syntax1 = {PURE,
+                                       SPACE,
+                                       PURE};
+
+    std::vector<StringType> syntax2 = {PURE,
+                                       SPACE,
+                                       DATE,
+                                       SPACE,
+                                       DATE};
+
+    std::list<task> registeredTasks = readTasks();
+    std::vector<std::wstring> parameters;
+    std::list<task> targetTasks;
+    try
+    {
+        parameters = parseParameter(userInput, syntax2);
+        if (dateCompare(parameters[2], parameters[4]) == -1)
+            throw L"시작 날짜가 종료 날짜보다 늦습니다.";
+        targetTasks = startingTasksWithinPeriod(registeredTasks, parameters[2], parameters[4]);
+        if (targetTasks.empty())
+            throw L"해당하는 기간에 시작하는 일정이 없습니다.";
+    }
+    catch (wchar_t const *err)
+    {
+        if (!parameters.empty())
+        {
+            printSysMsg(err);
+            return;
+        }
+    }
+
+    try
+    {
+        if (parameters.empty())
+        {
+            parameters = parseParameter(userInput, syntax1);
+            for (task t : registeredTasks)
+                if (t.id.compare(parameters[2]) == 0)
+                    targetTasks.push_back(t);
+
+            if (targetTasks.empty())
+                throw L"해당하는 id의 일정이 없습니다.";
+        }
+    }
+    catch (wchar_t const *err)
+    {
+        printSysMsg(err);
+        return;
+    }
+
+    for (task t : targetTasks)
+        printTask(t);
+    printSysMsg(L"위 일정을 삭제하시겠습니까?");
+
+    std::wstring deleteConfirm = getUserInput();
+    std::vector<StringType> deleteConfirmSyntax = {BOOL};
+    try
+    {
+        if (parseParameter(deleteConfirm, deleteConfirmSyntax)[0].compare(L"Y") == 0)
+        {
+            printSysMsg(L"위 일정을 삭제합니다.");
+            std::list<task>::iterator it = registeredTasks.begin();
+            while (it != registeredTasks.end() && !targetTasks.empty())
+            {
+                if ((*targetTasks.begin()).id.compare((*it).id) == 0)
+                {
+                    targetTasks.erase(targetTasks.begin());
+                    it = registeredTasks.erase(it);
+                }
+                else
+                    it++;
+            }
+
+            writeTasks(registeredTasks);
+        }
+        else
+        {
+            printSysMsg(L"삭제를 취소합니다.");
+        }
+    }
+    catch (wchar_t const *err)
+    {
+        printSysMsg(L"문법에 맞지 않는 입력, 삭제를 취소합니다.");
     }
 }
 
