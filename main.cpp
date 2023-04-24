@@ -12,10 +12,11 @@ int main()
 
     while (true)
     {
-        switch (cmdType(getUserInput()))
+        std::wstring userInput = getUserInput();
+        switch (cmdType(userInput))
         {
         case HELP:
-            printSysMsg(L"HELP");
+            help(userInput);
             break;
         case ADD:
             printSysMsg(L"ADD");
