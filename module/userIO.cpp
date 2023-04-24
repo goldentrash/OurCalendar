@@ -80,16 +80,22 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
                   isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
                   isSpecialChar(str[start + i])))
                 break;
+        if (i > 100)
+            throw "wrong string type";
         return str.substr(start, i);
     case PURE:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) || isNumChar(str[start + i])))
                 break;
+        if (i > 100)
+            throw "wrong string type";
         return str.substr(start, i);
     case SPACE:
         for (i = 0; i < str.length() - start; i++)
             if (!isSpaceChar(str[start + i]))
                 break;
+        if (i > 100)
+            throw "wrong string type";
         return str.substr(start, i);
     case BOOL:
         if (isBoolChar(str[start]))
@@ -100,6 +106,8 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
         for (i = 0; i < str.length() - start; i++)
             if (!isSpaceChar(str[start + i]))
                 break;
+        if (i > 100)
+            throw "wrong string type";
         return str.substr(start, i);
     case DATE:
         if (isDateStr(str.substr(start, 10)))
@@ -110,6 +118,8 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
         for (i = 0; i < str.length() - start; i++)
             if (!isNumChar(str[start + i]))
                 break;
+        if (i > 100)
+            throw "wrong string type";
         return str.substr(start, i);
     default:
         throw "wrong string type";
