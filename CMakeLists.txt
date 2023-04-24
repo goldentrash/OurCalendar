@@ -6,8 +6,8 @@ enable_testing()
 
 include_directories(include)
 file(GLOB HEADERS "include/*.h")
-file(GLOB MODULES "module/*.c")
-add_executable(OurCalendar main.c ${HEADERS} ${MODULES})
+file(GLOB MODULES "module/*.cpp")
+add_executable(OurCalendar main.cpp ${HEADERS} ${MODULES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
