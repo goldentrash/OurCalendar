@@ -147,7 +147,7 @@ void del(std::wstring userInput)
 
     for (task t : targetTasks)
         printTask(t);
-    printSysMsg(L"위 일정을 삭제하시겠습니까?");
+    printSysMsg(L"위 일정을 삭제하시겠습니까? (Y/N)");
 
     std::wstring deleteConfirm = getUserInput();
     std::vector<StringType> deleteConfirmSyntax = {BOOL};

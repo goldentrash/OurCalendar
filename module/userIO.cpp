@@ -58,7 +58,7 @@ bool isDateStr(const std::wstring str)
         return false;
 
     int dayLimit[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    if (std::stoi(year) % 4 == 0 && (std::stoi(year) % 100 != 0 || std::stoi(year) % 400 == 0))
+    if (std::stoi(year) % 4 == 0 && (std::stoi(year) % 100 != 0 || std::stoi(year) % 400 == 0)) // 윤년계산
         dayLimit[2] = 29;
 
     if (year.compare(L"2000") < 0 || year.compare(L"2040") > 0 ||

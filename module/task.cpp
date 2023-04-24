@@ -74,7 +74,7 @@ bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
     return std::find_if(registeredTasks.begin(), registeredTasks.end(),
                         [newTask](task t)
                         {
-                            if (newTask.compatable.compare(L"Y") == 0 || t.compatable.compare(L"Y") == 0)
+                            if (newTask.compatable.compare(L"N") == 0 || t.compatable.compare(L"N") == 0)
                                 return !(dateCompare(newTask.startDate, t.endDate) == -1 ||
                                          dateCompare(newTask.endDate, t.startDate) == 1);
                             else
