@@ -77,7 +77,8 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
     case NORMAL:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) ||
-                  isNumChar(str[start + i]) || isSpaceChar(str[start + i])))
+                  isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
+                  isSpecialChar(str[start + i])))
                 break;
         return str.substr(start, i);
     case PURE:
