@@ -82,6 +82,17 @@ bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
                         }) != registeredTasks.end();
 }
 
+std::list<task> overlappingTasks(std::list<task> registeredTasks, std::wstring startDate, std::wstring endDate)
+{
+    std::list<task> tasks;
+    for (task t : registeredTasks)
+        if (!(dateCompare(startDate, t.endDate) == -1 ||
+              dateCompare(endDate, t.startDate) == 1))
+            tasks.push_back(t);
+
+    return tasks;
+}
+
 std::list<task> startingTasksWithinPeriod(std::list<task> registeredTasks, std::wstring startDate, std::wstring endDate)
 {
     std::list<task> tasks;

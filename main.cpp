@@ -27,7 +27,7 @@ int main()
             del(userInput);
             break;
         case SEARCH:
-            printSysMsg(L"SEARCH");
+            search(userInput);
             break;
         case QUIT:
             printSysMsg(L"QUIT");

@@ -181,6 +181,54 @@ void del(std::wstring userInput)
     }
 }
 
+void search(std::wstring userInput)
+{
+    std::vector<StringType> syntax1 = {PURE};
+
+    std::vector<StringType> syntax2 = {PURE,
+                                       SPACE,
+                                       DATE,
+                                       SPACE,
+                                       DATE};
+
+    std::list<task> registeredTasks = readTasks();
+    std::vector<std::wstring> parameters;
+    std::list<task> targetTasks;
+
+    try
+    {
+        parameters = parseParameter(userInput, syntax2);
+        if (dateCompare(parameters[2], parameters[4]) == -1)
+            throw L"시작 날짜가 종료 날짜보다 늦습니다.";
+        targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
+    }
+    catch (wchar_t const *err)
+    {
+        if (!parameters.empty())
+        {
+            printSysMsg(err);
+            return;
+        }
+    }
+
+    try
+    {
+        if (parameters.empty())
+        {
+            parameters = parseParameter(userInput, syntax1);
+            targetTasks = registeredTasks;
+        }
+    }
+    catch (wchar_t const *err)
+    {
+        printSysMsg(err);
+        return;
+    }
+
+    for (task t : targetTasks)
+        printTask(t);
+}
+
 std::vector<std::wstring> parseParameter(std::wstring userInput, std::vector<StringType> syntax)
 {
     int cursor = 0;
