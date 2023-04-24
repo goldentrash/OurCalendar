@@ -3,13 +3,15 @@
 #include <locale>
 #include <userIO.h>
 #include <command.h>
+#include <task.h>
 
 int main()
 {
-    std::setlocale(LC_ALL, "ko_KR.UTF-8");
+    std::locale::global(std::locale("ko_KR.UTF-8"));
 
-    // file diagnosis
+    readTasks(); // 무결성 검사
 
+    printSysMsg(L"Welcom!");
     while (true)
     {
         std::wstring userInput = getUserInput();
@@ -19,7 +21,7 @@ int main()
             help(userInput);
             break;
         case ADD:
-            printSysMsg(L"ADD");
+            add(userInput);
             break;
         case DEL:
             printSysMsg(L"DEL");

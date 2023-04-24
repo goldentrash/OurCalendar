@@ -81,21 +81,21 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
                   isSpecialChar(str[start + i])))
                 break;
         if (i > 100)
-            throw "wrong string type";
+            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
         return str.substr(start, i);
     case PURE:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) || isNumChar(str[start + i])))
                 break;
         if (i > 100)
-            throw "wrong string type";
+            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
         return str.substr(start, i);
     case SPACE:
         for (i = 0; i < str.length() - start; i++)
             if (!isSpaceChar(str[start + i]))
                 break;
         if (i > 100)
-            throw "wrong string type";
+            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
         return str.substr(start, i);
     case BOOL:
         if (isBoolChar(str[start]))
@@ -107,7 +107,7 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
             if (!isSpaceChar(str[start + i]))
                 break;
         if (i > 100)
-            throw "wrong string type";
+            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
         return str.substr(start, i);
     case DATE:
         if (isDateStr(str.substr(start, 10)))
@@ -119,17 +119,17 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
             if (!isNumChar(str[start + i]))
                 break;
         if (i > 100)
-            throw "wrong string type";
+            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
         return str.substr(start, i);
     default:
-        throw "wrong string type";
+        throw L"잘못된 문자열 종류입니다.";
     }
 };
 
 int dateCompare(std::wstring a, std::wstring b)
 {
     if (!(isDateStr(a) && isDateStr(b)))
-        throw "wrong date format";
+        throw L"날짜 문자열이 아닙니다.";
 
     int yearA = std::stoi(a.substr(0, 4)),
         yearB = std::stoi(b.substr(0, 4));
