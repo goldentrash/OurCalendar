@@ -229,6 +229,20 @@ void search(std::wstring userInput)
         printTask(t);
 }
 
+void quit(std::wstring userInput)
+{
+    std::vector<StringType> syntax = {PURE};
+    try
+    {
+        parseParameter(userInput, syntax);
+    }
+    catch (wchar_t const *err)
+    {
+        printSysMsg(err);
+    }
+    printSysMsg(L"안녕히 가세요!");
+}
+
 std::vector<std::wstring> parseParameter(std::wstring userInput, std::vector<StringType> syntax)
 {
     int cursor = 0;

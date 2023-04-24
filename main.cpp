@@ -30,8 +30,8 @@ int main()
             search(userInput);
             break;
         case QUIT:
-            printSysMsg(L"QUIT");
-            break;
+            quit(userInput);
+            return 0;
         default:
             break;
         }
