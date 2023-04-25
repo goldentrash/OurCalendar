@@ -11,7 +11,7 @@ int main()
 
     readTasks(); // 무결성 검사
 
-    printSysMsg(L"Welcom!");
+    printSysMsg(L"Welcome!");
     while (true)
     {
         std::wstring userInput = getUserInput();

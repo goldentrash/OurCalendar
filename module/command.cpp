@@ -63,11 +63,11 @@ void add(std::wstring userInput)
         newTask.endDate = parameters[4];
 
         if (dateCompare(newTask.startDate, newTask.endDate) == -1)
-            throw L"시작 날짜가 종료 날짜보다 늦습니다.";
+            throw L"인자1의 날짜는 인자2의 날짜보다 앞서거나 같아야 합니다.";
 
         std::list<task> registeredTasks = readTasks();
         if (hasOverlappingTask(registeredTasks, newTask))
-            throw L"겹치는 일정이 있습니다.";
+            throw L"해당 기간에 이미 다른 일정이 등록되어 있습니다.";
 
         printSysMsg(L"일정 내용을 입력해 주세요");
         newTask.contents = getUserInput();
@@ -112,7 +112,7 @@ void del(std::wstring userInput)
     {
         parameters = parseParameter(userInput, syntax2);
         if (dateCompare(parameters[2], parameters[4]) == -1)
-            throw L"시작 날짜가 종료 날짜보다 늦습니다.";
+            throw L"인자1은 인자2보다 앞서거나 동일한 날짜여야 합니다.";
         targetTasks = startingTasksWithinPeriod(registeredTasks, parameters[2], parameters[4]);
         if (targetTasks.empty())
             throw L"해당하는 기간에 시작하는 일정이 없습니다.";
@@ -199,7 +199,7 @@ void search(std::wstring userInput)
     {
         parameters = parseParameter(userInput, syntax2);
         if (dateCompare(parameters[2], parameters[4]) == -1)
-            throw L"시작 날짜가 종료 날짜보다 늦습니다.";
+            throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
         targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
     }
     catch (wchar_t const *err)
