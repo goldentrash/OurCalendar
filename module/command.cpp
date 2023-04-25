@@ -3,6 +3,9 @@
 #include <vector>
 #include <list>
 #include <task.h>
+#include <random>
+#include <cstdlib>
+#include <ctime>
 
 std::vector<std::wstring>
 parseParameter(std::wstring userInput, std::vector<StringType> syntax);
@@ -45,13 +48,13 @@ void help(std::wstring userInput)
 
 void add(std::wstring userInput)
 {
-    std::vector<StringType> syntax = {PURE,
+    std::vector<StringType> syntax = { PURE,
                                       SPACE,
                                       DATE,
                                       SPACE,
                                       DATE,
                                       SPACE,
-                                      BOOL};
+                                      BOOL };
 
     try
     {
@@ -75,18 +78,16 @@ void add(std::wstring userInput)
         if (stepStr(newTask.contents, 0, NORMAL).length() != newTask.contents.length())
             throw L"한글과 알파벳, 숫자와 [0, /, .]만 지원됩니다. 일정 등록을 취소합니다.";
 
-        if (registeredTasks.empty())
-            newTask.id = L"0";
-        else
-            newTask.id = std::to_wstring(stoi(registeredTasks.back().id) + 1);
-
+        do {
+            newTask.id = getRandomString();
+        } while (isIdExists(registeredTasks, newTask.id));
         registeredTasks.push_back(newTask);
         writeTasks(registeredTasks);
         printSysMsg(L"일정 " + newTask.id + L"가 등록되었습니다.");
 
         readTasks(); // 무결성 검사
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(err);
         return;
@@ -263,4 +264,32 @@ std::vector<std::wstring> parseParameter(std::wstring userInput, std::vector<Str
         throw L"문법에 맞지 않은 입력입니다.";
 
     return parameters;
+}
+
+std::wstring getRandomString() {
+    std::wstring result;
+    std::srand(std::time(nullptr));
+    do {
+        result.clear();
+        for (int i = 0; i < 2; ++i) {
+            int r = std::rand() % 3;
+            switch (r) {
+            case 0:
+                result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + '가');
+                break;
+            case 1:
+                if (std::rand() % 2 == 0) {
+                    result += static_cast<wchar_t>(std::rand() % 26 + 'a');
+                }
+                else {
+                    result += static_cast<wchar_t>(std::rand() % 26 + 'A');
+                }
+                break;
+            case 2:
+                result += static_cast<wchar_t>(std::rand() % 10 + '0');
+                break;
+            }
+        }
+    } while (result.empty());
+    return result;
 }

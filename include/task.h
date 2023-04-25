@@ -10,6 +10,7 @@ struct task
     std::wstring contents;
 };
 
+bool isIdExists(std::list<task>&, const std::wstring&);
 std::list<task> readTasks();
 void writeTasks(std::list<task>);
 std::wstring toString(task);

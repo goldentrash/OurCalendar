@@ -7,6 +7,18 @@
 
 const std::string DATA_PATH = "./data.csv";
 
+bool isIdExists(std::list<task>& tasks, const std::wstring& id)
+{
+    for (auto& t : tasks)
+    {
+        if (t.id == id)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::list<task> readTasks()
 {
     std::wifstream fin;
@@ -36,6 +48,12 @@ std::list<task> readTasks()
         getline(sin, t.startDate, L',');
         getline(sin, t.endDate, L',');
         getline(sin, t.contents, L',');
+
+        if (isIdExists(tasks, t.id))
+        {
+            printSysMsg(L"데이터 파일이 손상되었습니다.");
+            exit(EXIT_FAILURE);
+        }
 
         tasks.push_back(t);
     }
@@ -102,3 +120,4 @@ std::list<task> startingTasksWithinPeriod(std::list<task> registeredTasks, std::
 
     return tasks;
 }
+
