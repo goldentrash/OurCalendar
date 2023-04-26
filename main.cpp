@@ -7,7 +7,7 @@
 
 int main()
 {
-    std::locale::global(std::locale("ko_KR.UTF-8")); // 한글 사용을 위한 locale 설정
+    std::locale::global(std::locale("korean")); // 한글 사용을 위한 locale 설정
 
     readTasks(); // 무결성 검사
 
