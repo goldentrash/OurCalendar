@@ -9,6 +9,7 @@
 
 std::vector<std::wstring>
 parseParameter(std::wstring userInput, std::vector<StringType> syntax);
+std::wstring getRandomString();
 
 Cmd cmdType(std::wstring userInput)
 {
@@ -281,7 +282,7 @@ std::wstring getRandomString()
             switch (r)
             {
             case 0:
-                result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + '가');
+                result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + L'가');
                 break;
             case 1:
                 if (std::rand() % 2 == 0)
