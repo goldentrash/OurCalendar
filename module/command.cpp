@@ -48,13 +48,13 @@ void help(std::wstring userInput)
 
 void add(std::wstring userInput)
 {
-    std::vector<StringType> syntax = { PURE,
+    std::vector<StringType> syntax = {PURE,
                                       SPACE,
                                       DATE,
                                       SPACE,
                                       DATE,
                                       SPACE,
-                                      BOOL };
+                                      BOOL};
 
     try
     {
@@ -78,7 +78,8 @@ void add(std::wstring userInput)
         if (stepStr(newTask.contents, 0, NORMAL).length() != newTask.contents.length())
             throw L"한글과 알파벳, 숫자와 [0, /, .]만 지원됩니다. 일정 등록을 취소합니다.";
 
-        do {
+        do
+        {
             newTask.id = getRandomString();
         } while (isIdExists(registeredTasks, newTask.id));
         registeredTasks.push_back(newTask);
@@ -87,7 +88,7 @@ void add(std::wstring userInput)
 
         readTasks(); // 무결성 검사
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return;
@@ -170,6 +171,7 @@ void del(std::wstring userInput)
             }
 
             writeTasks(registeredTasks);
+            readTasks(); // 무결성 검사
         }
         else
         {
@@ -266,22 +268,28 @@ std::vector<std::wstring> parseParameter(std::wstring userInput, std::vector<Str
     return parameters;
 }
 
-std::wstring getRandomString() {
+std::wstring getRandomString()
+{
     std::wstring result;
     std::srand(std::time(nullptr));
-    do {
+    do
+    {
         result.clear();
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i)
+        {
             int r = std::rand() % 3;
-            switch (r) {
+            switch (r)
+            {
             case 0:
                 result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + '가');
                 break;
             case 1:
-                if (std::rand() % 2 == 0) {
+                if (std::rand() % 2 == 0)
+                {
                     result += static_cast<wchar_t>(std::rand() % 26 + 'a');
                 }
-                else {
+                else
+                {
                     result += static_cast<wchar_t>(std::rand() % 26 + 'A');
                 }
                 break;

@@ -7,11 +7,11 @@
 
 const std::string DATA_PATH = "./data.csv";
 
-bool isIdExists(std::list<task>& tasks, const std::wstring& id)
+bool isIdExists(std::list<task> &tasks, const std::wstring &id)
 {
-    for (auto& t : tasks)
+    for (task &t : tasks)
     {
-        if (t.id == id)
+        if (t.id.compare(id) == 0)
         {
             return true;
         }
@@ -120,4 +120,3 @@ std::list<task> startingTasksWithinPeriod(std::list<task> registeredTasks, std::
 
     return tasks;
 }
-
