@@ -1,5 +1,6 @@
-#include <userIO.h>
+#include "userIO.h"
 #include <iostream>
+#include <string>
 
 void printSysMsg(std::wstring msg)
 {
@@ -17,15 +18,15 @@ std::wstring getUserInput()
 bool isKorChar(const wchar_t c)
 {
     return (c >= L'가' && c <= L'힣') ||
-           (c >= L'ㄱ' && c <= L'ㅣ') ||
-           (c >= 0x1100 && c <= 0x1112) ||
-           (c >= 0x1161 && c <= 0x1175) ||
-           (c >= 0x11A8 && c <= 0x11C3);
+        (c >= L'ㄱ' && c <= L'ㅣ') ||
+        (c >= 0x1100 && c <= 0x1112) ||
+        (c >= 0x1161 && c <= 0x1175) ||
+        (c >= 0x11A8 && c <= 0x11C3);
 };
 bool isEngChar(const wchar_t c)
 {
     return (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z');
+        (c >= 'A' && c <= 'Z');
 };
 bool isSpaceChar(const wchar_t c)
 {
@@ -57,7 +58,7 @@ bool isDateStr(const std::wstring str)
     if (!(year.length() == 4 && month.length() == 2 && day.length() == 2))
         return false;
 
-    int dayLimit[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int dayLimit[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     if (std::stoi(year) % 4 == 0 && (std::stoi(year) % 100 != 0 || std::stoi(year) % 400 == 0)) // 윤년계산
         dayLimit[2] = 29;
 
@@ -77,25 +78,25 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
     case NORMAL:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) ||
-                  isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
-                  isSpecialChar(str[start + i])))
+                isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
+                isSpecialChar(str[start + i])))
                 break;
         if (i > 100)
-            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
+            throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
     case PURE:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) || isNumChar(str[start + i])))
                 break;
         if (i > 100)
-            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
+            throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
     case SPACE:
         for (i = 0; i < str.length() - start; i++)
             if (!isSpaceChar(str[start + i]))
                 break;
         if (i > 100)
-            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
+            throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
     case BOOL:
         if (isBoolChar(str[start]))
@@ -107,7 +108,7 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
             if (!isSpaceChar(str[start + i]))
                 break;
         if (i > 100)
-            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
+            throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
     case DATE:
         if (isDateStr(str.substr(start, 10)))
@@ -119,7 +120,7 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
             if (!isNumChar(str[start + i]))
                 break;
         if (i > 100)
-            throw L"문자열의 길이는 100을 초과할 수 없습니다.";
+            throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
     default:
         throw L"잘못된 문자열 종류입니다.";

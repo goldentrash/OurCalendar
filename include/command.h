@@ -15,4 +15,4 @@ void help(std::wstring);
 void add(std::wstring);
 void del(std::wstring);
 void search(std::wstring);
-void quit(std::wstring);
+bool quit(std::wstring);

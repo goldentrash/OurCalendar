@@ -1,17 +1,17 @@
-#include <task.h>
+#include "task.h"
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include <userIO.h>
+#include "userIO.h"
 
 const std::string DATA_PATH = "./data.csv";
 
-bool isIdExists(std::list<task> &tasks, const std::wstring &id)
+bool isIdExists(std::list<task>& tasks, const std::wstring& id)
 {
-    for (task &t : tasks)
+    for (auto& t : tasks)
     {
-        if (t.id.compare(id) == 0)
+        if (t.id == id)
         {
             return true;
         }
@@ -78,7 +78,7 @@ void writeTasks(std::list<task> tasks)
 std::wstring toString(task t)
 {
     return t.id + L"," + t.compatable + L"," +
-           t.startDate + L"," + t.endDate + L"," + t.contents;
+        t.startDate + L"," + t.endDate + L"," + t.contents;
 }
 
 void printTask(task t)
@@ -90,14 +90,14 @@ void printTask(task t)
 bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
 {
     return std::find_if(registeredTasks.begin(), registeredTasks.end(),
-                        [newTask](task t)
-                        {
-                            if (newTask.compatable.compare(L"N") == 0 || t.compatable.compare(L"N") == 0)
-                                return !(dateCompare(newTask.startDate, t.endDate) == -1 ||
-                                         dateCompare(newTask.endDate, t.startDate) == 1);
-                            else
-                                return false;
-                        }) != registeredTasks.end();
+        [newTask](task t)
+        {
+            if (newTask.compatable.compare(L"N") == 0 || t.compatable.compare(L"N") == 0)
+                return !(dateCompare(newTask.startDate, t.endDate) == -1 ||
+                    dateCompare(newTask.endDate, t.startDate) == 1);
+            else
+                return false;
+        }) != registeredTasks.end();
 }
 
 std::list<task> overlappingTasks(std::list<task> registeredTasks, std::wstring startDate, std::wstring endDate)
@@ -105,7 +105,7 @@ std::list<task> overlappingTasks(std::list<task> registeredTasks, std::wstring s
     std::list<task> tasks;
     for (task t : registeredTasks)
         if (!(dateCompare(startDate, t.endDate) == -1 ||
-              dateCompare(endDate, t.startDate) == 1))
+            dateCompare(endDate, t.startDate) == 1))
             tasks.push_back(t);
 
     return tasks;
