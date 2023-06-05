@@ -55,7 +55,12 @@ void add(std::wstring userInput)
                                       SPACE,
                                       DATE,
                                       SPACE,
+                                      BOOL,
+                                      SPACE,
                                       BOOL};
+    std::vector<StringType> syntax2 = {NUM,
+                                       SPACE,
+                                       DURATION_UNIT};
 
     try
     {
@@ -66,27 +71,66 @@ void add(std::wstring userInput)
         newTask.startDate = parameters[2];
         newTask.endDate = parameters[4];
 
+        std::vector<task> newTasks;
+        newTasks.push_back(newTask);
+
         if (dateCompare(newTask.startDate, newTask.endDate) == -1)
             throw L"인자1의 날짜는 인자2의 날짜보다 앞서거나 같아야 합니다.";
 
+        // 반복 일정일 경우
+        if (parameters[8].compare(L"Y") == 0)
+        {
+            printSysMsg(L"반복 내용을 입력해 주세요.");
+            std::vector<std::wstring> parameters2 = parseParameter(getUserInput(), syntax2);
+
+            if (parameters2[0].compare(L"0") == 0)
+                throw L"반복 간격은 0보다 커야 합니다.";
+
+            // 반복 일정 생성
+            // 날짜 더하는 함수 필요
+            std::wstring sdate = newTask.endDate; // + recurring gap
+            std::wstring edate = sdate;           // + newTask.endDate - newTask.startDate
+            while (dateCompare(sdate, L"2040-01-01") != 1)
+            {
+                //   task nxtTask = {  };
+            }
+        }
+
         std::list<task> registeredTasks = readTasks();
-        if (hasOverlappingTask(registeredTasks, newTask))
-            throw L"해당 기간에 이미 다른 일정이 등록되어 있습니다.";
+        for (const task &t : newTasks)
+            if (hasOverlappingTask(registeredTasks, t))
+                throw L"해당 기간에 이미 다른 일정이 등록되어 있습니다.";
 
         printSysMsg(L"일정 내용을 입력해 주세요");
-        newTask.contents = getUserInput();
-
-        if (stepStr(newTask.contents, 0, NORMAL).length() != newTask.contents.length())
+        std::wstring contents = getUserInput();
+        if (stepStr(contents, 0, NORMAL).length() != contents.length())
             throw L"한글과 알파벳, 숫자와 [0, /, .]만 지원됩니다. 일정 등록을 취소합니다.";
 
-        do
-        {
-            newTask.id = getRandomString();
-        } while (isIdExists(registeredTasks, newTask.id));
-        registeredTasks.push_back(newTask);
-        writeTasks(registeredTasks);
-        printSysMsg(L"일정 " + newTask.id + L"가 등록되었습니다.");
+        // 반복 id
+        std::wstring recurringId;
+        if (parameters[8].compare(L"Y") == 0)
+            do
+            {
+                recurringId = getRandomString();
+            } while (isIdExists(registeredTasks, recurringId));
+        else
+            recurringId = L"0";
 
+        for (task &t : newTasks)
+        {
+            t.contents = contents;
+            t.recurringId = recurringId;
+
+            do
+            {
+                t.id = getRandomString();
+            } while (isIdExists(registeredTasks, t.id));
+
+            registeredTasks.push_back(t);
+        }
+
+        writeTasks(registeredTasks);
+        printSysMsg(L"일정이 등록되었습니다.");
         readTasks(); // 무결성 검사
     }
     catch (wchar_t const *err)
@@ -190,48 +234,55 @@ void search(std::wstring userInput)
 {
     std::vector<StringType> syntax1 = {PURE};
 
-    std::vector<StringType> syntax2 = {PURE,
-                                       SPACE,
-                                       DATE,
-                                       SPACE,
-                                       DATE};
+    std::vector<StringType> syntax2 = { PURE,
+                                        SPACE,
+                                        DATE,
+                                        for (int ti = 0; ti < newTasks.size(); ti++) // 여기도 걍 참조형으로
+                                        {
+                                            newTasks[ti].recurringGap = parameters2[0];
+    newTasks[ti].recuuringDurationUnit = parameters2[2];
+}
+SPACE,
+    DATE
+}
+;
 
-    std::list<task> registeredTasks = readTasks();
-    std::vector<std::wstring> parameters;
-    std::list<task> targetTasks;
+std::list<task> registeredTasks = readTasks();
+std::vector<std::wstring> parameters;
+std::list<task> targetTasks;
 
-    try
-    {
-        parameters = parseParameter(userInput, syntax2);
-        if (dateCompare(parameters[2], parameters[4]) == -1)
-            throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
-        targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
-    }
-    catch (wchar_t const *err)
-    {
-        if (!parameters.empty())
-        {
-            printSysMsg(err);
-            return;
-        }
-    }
-
-    try
-    {
-        if (parameters.empty())
-        {
-            parameters = parseParameter(userInput, syntax1);
-            targetTasks = registeredTasks;
-        }
-    }
-    catch (wchar_t const *err)
+try
+{
+    parameters = parseParameter(userInput, syntax2);
+    if (dateCompare(parameters[2], parameters[4]) == -1)
+        throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
+    targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
+}
+catch (wchar_t const *err)
+{
+    if (!parameters.empty())
     {
         printSysMsg(err);
         return;
     }
+}
 
-    for (task t : targetTasks)
-        printTask(t);
+try
+{
+    if (parameters.empty())
+    {
+        parameters = parseParameter(userInput, syntax1);
+        targetTasks = registeredTasks;
+    }
+}
+catch (wchar_t const *err)
+{
+    printSysMsg(err);
+    return;
+}
+
+for (task t : targetTasks)
+    printTask(t);
 }
 
 bool quit(std::wstring userInput)

@@ -7,9 +7,9 @@
 
 const std::string DATA_PATH = "./data.csv";
 
-bool isIdExists(std::list<task>& tasks, const std::wstring& id)
+bool isIdExists(std::list<task> &tasks, const std::wstring &id)
 {
-    for (auto& t : tasks)
+    for (auto &t : tasks)
     {
         if (t.id == id)
         {
@@ -48,6 +48,9 @@ std::list<task> readTasks()
         getline(sin, t.startDate, L',');
         getline(sin, t.endDate, L',');
         getline(sin, t.contents, L',');
+        getline(sin, t.recurringId, L',');
+        getline(sin, t.recurringGap, L',');
+        getline(sin, t.recuuringDurationUnit, L',');
 
         if (isIdExists(tasks, t.id))
         {
@@ -77,27 +80,34 @@ void writeTasks(std::list<task> tasks)
 
 std::wstring toString(task t)
 {
-    return t.id + L"," + t.compatable + L"," +
+    std::wstring ret =
+        t.id + L"," + t.compatable + L"," +
         t.startDate + L"," + t.endDate + L"," + t.contents;
+    if (t.recurringId.compare(L"0") != 0)
+        ret += L"," + t.recurringId + L"," + t.recurringGap + L"," + t.recuuringDurationUnit;
+
+    return ret;
 }
 
 void printTask(task t)
 {
     printSysMsg(t.id + L"\t" + t.compatable + L" " + t.startDate + L" ~ " + t.endDate);
+    if (t.recurringId.compare(L"0") != 0)
+        printSysMsg(t.recurringId + L"\t" + t.recurringGap + L" " + t.recuuringDurationUnit);
     printSysMsg(t.contents);
 }
 
 bool hasOverlappingTask(std::list<task> registeredTasks, task newTask)
 {
     return std::find_if(registeredTasks.begin(), registeredTasks.end(),
-        [newTask](task t)
-        {
-            if (newTask.compatable.compare(L"N") == 0 || t.compatable.compare(L"N") == 0)
-                return !(dateCompare(newTask.startDate, t.endDate) == -1 ||
-                    dateCompare(newTask.endDate, t.startDate) == 1);
-            else
-                return false;
-        }) != registeredTasks.end();
+                        [newTask](task t)
+                        {
+                            if (newTask.compatable.compare(L"N") == 0 || t.compatable.compare(L"N") == 0)
+                                return !(dateCompare(newTask.startDate, t.endDate) == -1 ||
+                                         dateCompare(newTask.endDate, t.startDate) == 1);
+                            else
+                                return false;
+                        }) != registeredTasks.end();
 }
 
 std::list<task> overlappingTasks(std::list<task> registeredTasks, std::wstring startDate, std::wstring endDate)
@@ -105,7 +115,7 @@ std::list<task> overlappingTasks(std::list<task> registeredTasks, std::wstring s
     std::list<task> tasks;
     for (task t : registeredTasks)
         if (!(dateCompare(startDate, t.endDate) == -1 ||
-            dateCompare(endDate, t.startDate) == 1))
+              dateCompare(endDate, t.startDate) == 1))
             tasks.push_back(t);
 
     return tasks;
