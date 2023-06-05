@@ -8,9 +8,12 @@ struct task
     std::wstring startDate;
     std::wstring endDate;
     std::wstring contents;
+    std::wstring recurringId;
+    std::wstring recurringGap;
+    std::wstring recuuringDurationUnit;
 };
 
-bool isIdExists(std::list<task>&, const std::wstring&);
+bool isIdExists(std::list<task> &, const std::wstring &);
 std::list<task> readTasks();
 void writeTasks(std::list<task>);
 std::wstring toString(task);

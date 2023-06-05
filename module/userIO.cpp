@@ -18,15 +18,15 @@ std::wstring getUserInput()
 bool isKorChar(const wchar_t c)
 {
     return (c >= L'가' && c <= L'힣') ||
-        (c >= L'ㄱ' && c <= L'ㅣ') ||
-        (c >= 0x1100 && c <= 0x1112) ||
-        (c >= 0x1161 && c <= 0x1175) ||
-        (c >= 0x11A8 && c <= 0x11C3);
+           (c >= L'ㄱ' && c <= L'ㅣ') ||
+           (c >= 0x1100 && c <= 0x1112) ||
+           (c >= 0x1161 && c <= 0x1175) ||
+           (c >= 0x11A8 && c <= 0x11C3);
 };
 bool isEngChar(const wchar_t c)
 {
     return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z');
+           (c >= 'A' && c <= 'Z');
 };
 bool isSpaceChar(const wchar_t c)
 {
@@ -58,7 +58,7 @@ bool isDateStr(const std::wstring str)
     if (!(year.length() == 4 && month.length() == 2 && day.length() == 2))
         return false;
 
-    int dayLimit[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int dayLimit[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (std::stoi(year) % 4 == 0 && (std::stoi(year) % 100 != 0 || std::stoi(year) % 400 == 0)) // 윤년계산
         dayLimit[2] = 29;
 
@@ -69,6 +69,10 @@ bool isDateStr(const std::wstring str)
 
     return true;
 }
+bool isDurationUnit(const wchar_t c)
+{
+    return c == 'D' || c == 'M' || c == 'Y';
+}
 
 std::wstring stepStr(std::wstring str, int start, StringType type)
 {
@@ -78,8 +82,8 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
     case NORMAL:
         for (i = 0; i < str.length() - start; i++)
             if (!(isKorChar(str[start + i]) || isEngChar(str[start + i]) ||
-                isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
-                isSpecialChar(str[start + i])))
+                  isNumChar(str[start + i]) || isSpaceChar(str[start + i]) ||
+                  isSpecialChar(str[start + i])))
                 break;
         if (i > 100)
             throw L"문법 규칙에 맞지 않는 입력입니다.";
@@ -122,6 +126,11 @@ std::wstring stepStr(std::wstring str, int start, StringType type)
         if (i > 100)
             throw L"문법 규칙에 맞지 않는 입력입니다.";
         return str.substr(start, i);
+    case DURATION_UNIT:
+        if (isDurationUnit(str[start]))
+            return str.substr(start, 1);
+        else
+            return str.substr(start, 0);
     default:
         throw L"잘못된 문자열 종류입니다.";
     }

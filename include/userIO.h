@@ -9,7 +9,8 @@ enum StringType
     SPECIAL,
     DATE,
     NUM,
-    ERROR
+    ERROR,
+    DURATION_UNIT
 };
 
 void printSysMsg(std::wstring);
