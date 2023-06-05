@@ -42,20 +42,20 @@ void help(std::wstring userInput)
         L"[search] + [공백 문자열] + [날짜 문자열] + [공백 문자열] + [날짜 문자열] + [개행 문자열]",
         L"[delete] + [공백 문자열] + [순수 문자열] + [개행 문자열]",
         L"[delete] + [공백 문자열] + [날짜 문자열] + [공백 문자열] + [날짜 문자열] + [개행 문자열]",
-        L"[quit] + [개행 문자열]" };
+        L"[quit] + [개행 문자열]"};
     for (std::wstring syntax : syntaxes)
         printSysMsg(syntax);
 }
 
 void add(std::wstring userInput)
 {
-    std::vector<StringType> syntax = { PURE,
+    std::vector<StringType> syntax = {PURE,
                                       SPACE,
                                       DATE,
                                       SPACE,
                                       DATE,
                                       SPACE,
-                                      BOOL };
+                                      BOOL};
 
     try
     {
@@ -79,7 +79,8 @@ void add(std::wstring userInput)
         if (stepStr(newTask.contents, 0, NORMAL).length() != newTask.contents.length())
             throw L"한글과 알파벳, 숫자와 [0, /, .]만 지원됩니다. 일정 등록을 취소합니다.";
 
-        do {
+        do
+        {
             newTask.id = getRandomString();
         } while (isIdExists(registeredTasks, newTask.id));
         registeredTasks.push_back(newTask);
@@ -88,7 +89,7 @@ void add(std::wstring userInput)
 
         readTasks(); // 무결성 검사
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return;
@@ -97,15 +98,15 @@ void add(std::wstring userInput)
 
 void del(std::wstring userInput)
 {
-    std::vector<StringType> syntax1 = { PURE,
+    std::vector<StringType> syntax1 = {PURE,
                                        SPACE,
-                                       PURE };
+                                       PURE};
 
-    std::vector<StringType> syntax2 = { PURE,
+    std::vector<StringType> syntax2 = {PURE,
                                        SPACE,
                                        DATE,
                                        SPACE,
-                                       DATE };
+                                       DATE};
 
     std::list<task> registeredTasks = readTasks();
     std::vector<std::wstring> parameters;
@@ -119,7 +120,7 @@ void del(std::wstring userInput)
         if (targetTasks.empty())
             throw L"해당하는 기간에 시작하는 일정이 없습니다.";
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         if (!parameters.empty())
         {
@@ -141,7 +142,7 @@ void del(std::wstring userInput)
                 throw L"해당하는 id의 일정이 없습니다.";
         }
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return;
@@ -152,7 +153,7 @@ void del(std::wstring userInput)
     printSysMsg(L"위 일정을 삭제하시겠습니까? (Y/N)");
 
     std::wstring deleteConfirm = getUserInput();
-    std::vector<StringType> deleteConfirmSyntax = { BOOL };
+    std::vector<StringType> deleteConfirmSyntax = {BOOL};
     try
     {
         if (parseParameter(deleteConfirm, deleteConfirmSyntax)[0].compare(L"Y") == 0)
@@ -179,7 +180,7 @@ void del(std::wstring userInput)
 
         readTasks();
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(L"문법에 맞지 않는 입력, 삭제를 취소합니다.");
     }
@@ -187,13 +188,13 @@ void del(std::wstring userInput)
 
 void search(std::wstring userInput)
 {
-    std::vector<StringType> syntax1 = { PURE };
+    std::vector<StringType> syntax1 = {PURE};
 
-    std::vector<StringType> syntax2 = { PURE,
+    std::vector<StringType> syntax2 = {PURE,
                                        SPACE,
                                        DATE,
                                        SPACE,
-                                       DATE };
+                                       DATE};
 
     std::list<task> registeredTasks = readTasks();
     std::vector<std::wstring> parameters;
@@ -206,7 +207,7 @@ void search(std::wstring userInput)
             throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
         targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         if (!parameters.empty())
         {
@@ -223,7 +224,7 @@ void search(std::wstring userInput)
             targetTasks = registeredTasks;
         }
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return;
@@ -235,18 +236,18 @@ void search(std::wstring userInput)
 
 bool quit(std::wstring userInput)
 {
-    std::vector<StringType> syntax = { PURE };
-    
+    std::vector<StringType> syntax = {PURE};
+
     try
     {
         parseParameter(userInput, syntax);
     }
-    catch (wchar_t const* err)
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return false;
     }
-    
+
     printSysMsg(L"안녕히 가세요!");
     return true;
 }
@@ -273,23 +274,29 @@ std::vector<std::wstring> parseParameter(std::wstring userInput, std::vector<Str
     return parameters;
 }
 
-std::wstring getRandomString() {
+std::wstring getRandomString()
+{
     std::wstring result;
-    do {
+    do
+    {
         std::srand(std::time(nullptr));
         result.clear();
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i)
+        {
             int r = std::rand() % 3;
-            switch (r) {
+            switch (r)
+            {
             case 0:
                 result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + '가');
                 break;
-               
+
             case 1:
-                if (std::rand() % 2 == 0) {
+                if (std::rand() % 2 == 0)
+                {
                     result += static_cast<wchar_t>(std::rand() % 26 + 'a');
                 }
-                else {
+                else
+                {
                     result += static_cast<wchar_t>(std::rand() % 26 + 'A');
                 }
                 break;
