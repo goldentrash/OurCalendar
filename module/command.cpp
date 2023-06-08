@@ -83,16 +83,24 @@ void add(std::wstring userInput)
             printSysMsg(L"반복 내용을 입력해 주세요.");
             std::vector<std::wstring> parameters2 = parseParameter(getUserInput(), syntax2);
 
-            if (parameters2[0].compare(L"0") == 0)
+            std::wstring recurringDurationUnit = parameters2[0];
+            std::wstring recurringGap = parameters2[2];
+
+            if (recurringGap.compare(L"0") == 0)
                 throw L"반복 간격은 0보다 커야 합니다.";
 
             // 반복 일정 생성
-            // 날짜 더하는 함수 필요
-            std::wstring sdate = newTask.endDate; // + recurring gap
-            std::wstring edate = sdate;           // + newTask.endDate - newTask.startDate
-            while (dateCompare(sdate, L"2040-01-01") != 1)
+            std::wstring sdate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
+            std::wstring edate = addDate(sdate, calcDateGap(newTask.endDate, newTask.startDate), L"D");
+            while (dateCompare(edate, L"2040-01-01") != 1)
             {
-                //   task nxtTask = {  };
+                task t;
+                t.compatable = newTask.compatable;
+                t.startDate = sdate;
+                t.endDate = edate;
+
+                sdate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
+                edate = addDate(sdate, calcDateGap(newTask.endDate, newTask.startDate), L"D");
             }
         }
 
@@ -179,7 +187,7 @@ void del(std::wstring userInput)
         {
             parameters = parseParameter(userInput, syntax1);
             for (task t : registeredTasks)
-                if (t.id.compare(parameters[2])||t.recurringId.compare(parameters[2]) == 0)
+                if (t.id.compare(parameters[2]) || t.recurringId.compare(parameters[2]) == 0)
                     targetTasks.push_back(t);
 
             if (targetTasks.empty())
@@ -234,55 +242,48 @@ void search(std::wstring userInput)
 {
     std::vector<StringType> syntax1 = {PURE};
 
-    std::vector<StringType> syntax2 = { PURE,
-                                        SPACE,
-                                        DATE,
-                                        for (int ti = 0; ti < newTasks.size(); ti++) // 여기도 걍 참조형으로
-                                        {
-                                            newTasks[ti].recurringGap = parameters2[0];
-    newTasks[ti].recuuringDurationUnit = parameters2[2];
-}
-SPACE,
-    DATE
-}
-;
+    std::vector<StringType> syntax2 = {PURE,
+                                       SPACE,
+                                       DATE,
+                                       SPACE,
+                                       DATE};
 
-std::list<task> registeredTasks = readTasks();
-std::vector<std::wstring> parameters;
-std::list<task> targetTasks;
+    std::list<task> registeredTasks = readTasks();
+    std::vector<std::wstring> parameters;
+    std::list<task> targetTasks;
 
-try
-{
-    parameters = parseParameter(userInput, syntax2);
-    if (dateCompare(parameters[2], parameters[4]) == -1)
-        throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
-    targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
-}
-catch (wchar_t const *err)
-{
-    if (!parameters.empty())
+    try
+    {
+        parameters = parseParameter(userInput, syntax2);
+        if (dateCompare(parameters[2], parameters[4]) == -1)
+            throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
+        targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
+    }
+    catch (wchar_t const *err)
+    {
+        if (!parameters.empty())
+        {
+            printSysMsg(err);
+            return;
+        }
+    }
+
+    try
+    {
+        if (parameters.empty())
+        {
+            parameters = parseParameter(userInput, syntax1);
+            targetTasks = registeredTasks;
+        }
+    }
+    catch (wchar_t const *err)
     {
         printSysMsg(err);
         return;
     }
-}
 
-try
-{
-    if (parameters.empty())
-    {
-        parameters = parseParameter(userInput, syntax1);
-        targetTasks = registeredTasks;
-    }
-}
-catch (wchar_t const *err)
-{
-    printSysMsg(err);
-    return;
-}
-
-for (task t : targetTasks)
-    printTask(t);
+    for (task t : targetTasks)
+        printTask(t);
 }
 
 bool quit(std::wstring userInput)
