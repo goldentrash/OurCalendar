@@ -158,3 +158,36 @@ int dateCompare(std::wstring a, std::wstring b)
 
     return 0;
 }
+
+std::wstring addDate(std::wstring trgDate, std::wstring gap, std::wstring durationUnit)
+{
+    std::wstring year = stepStr(trgDate, 0, NUM);
+    std::wstring month = stepStr(trgDate, 5, NUM);
+    std::wstring day = stepStr(trgDate, 8, NUM);
+
+    std::wstring ret;
+
+    if (durationUnit.compare(L"Y") == 0)
+    {
+        year = std::to_wstring(std::stoi(year) + std::stoi(gap));
+    }
+    else if (durationUnit.compare(L"M") == 0)
+    {
+        month = std::to_wstring(std::stoi(year) + std::stoi(gap));
+    }
+    else
+    {
+        day = std::to_wstring(std::stoi(year) + std::stoi(gap));
+    }
+
+    ret = year + L"-" + month + L"-" + day;
+    while (!isDateStr(ret))
+        ret = addDate(ret, L"-1", L"D");
+
+    return ret;
+}
+
+std::wstring calcDateGap(std::wstring endDate, std::wstring startDate)
+{
+    return std::to_wstring(std::stoi(endDate) - std::stoi(startDate));
+}
