@@ -7,10 +7,9 @@
 
 int main()
 {
-    std::locale::global(std::locale("korean")); // 한글 사용을 위한 locale 설정
+    std::locale::global(std::locale("ko_KR.UTF-8")); // 한글 사용을 위한 locale 설정
 
-    readTasks();// 무결성 검사
-      
+    readTasks(); // 무결성 검사
 
     printSysMsg(L"Welcome!");
     while (true)
@@ -31,7 +30,8 @@ int main()
             search(userInput);
             break;
         case QUIT:
-            if (quit(userInput)) {
+            if (quit(userInput))
+            {
                 return 0;
             }
             break;

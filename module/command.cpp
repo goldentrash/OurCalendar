@@ -70,6 +70,8 @@ void add(std::wstring userInput)
         newTask.compatable = parameters[6];
         newTask.startDate = parameters[2];
         newTask.endDate = parameters[4];
+        std::wstring recurringDurationUnit = L"D";
+        std::wstring recurringGap = L"0";
 
         std::vector<task> newTasks;
         newTasks.push_back(newTask);
@@ -83,24 +85,26 @@ void add(std::wstring userInput)
             printSysMsg(L"반복 내용을 입력해 주세요.");
             std::vector<std::wstring> parameters2 = parseParameter(getUserInput(), syntax2);
 
-            std::wstring recurringDurationUnit = parameters2[0];
-            std::wstring recurringGap = parameters2[2];
+            recurringDurationUnit = parameters2[2];
+            recurringGap = parameters2[0];
 
             if (recurringGap.compare(L"0") == 0)
                 throw L"반복 간격은 0보다 커야 합니다.";
 
             // 반복 일정 생성
-            std::wstring sdate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
-            std::wstring edate = addDate(sdate, calcDateGap(newTask.endDate, newTask.startDate), L"D");
-            while (dateCompare(edate, L"2040-01-01") != 1)
+            std::wstring sdate = addDate(newTask.startDate, recurringGap, recurringDurationUnit);
+            std::wstring edate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
+            while (dateCompare(edate, L"2040-01-01") != -1)
             {
                 task t;
                 t.compatable = newTask.compatable;
                 t.startDate = sdate;
                 t.endDate = edate;
 
-                sdate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
-                edate = addDate(sdate, calcDateGap(newTask.endDate, newTask.startDate), L"D");
+                sdate = addDate(sdate, recurringGap, recurringDurationUnit);
+                edate = addDate(edate, recurringGap, recurringDurationUnit);
+
+                newTasks.push_back(t);
             }
         }
 
@@ -128,11 +132,13 @@ void add(std::wstring userInput)
         {
             t.contents = contents;
             t.recurringId = recurringId;
+            t.recurringGap = recurringGap;
+            t.recuuringDurationUnit = recurringDurationUnit;
 
             do
             {
                 t.id = getRandomString();
-            } while (isIdExists(registeredTasks, t.id));
+            } while (isIdExists(registeredTasks, t.id) || recurringId.compare(t.id) == 0);
 
             registeredTasks.push_back(t);
         }
@@ -339,7 +345,7 @@ std::wstring getRandomString()
             switch (r)
             {
             case 0:
-                result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + '가');
+                result += static_cast<wchar_t>(std::rand() % (0xD7A3 - 0xAC00) + L'가');
                 break;
 
             case 1:

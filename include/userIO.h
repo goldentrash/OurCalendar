@@ -18,4 +18,3 @@ std::wstring getUserInput();
 std::wstring stepStr(std::wstring, int, StringType);
 int dateCompare(std::wstring, std::wstring);
 std::wstring addDate(std::wstring, std::wstring, std::wstring);
-std::wstring calcDateGap(std::wstring, std::wstring);

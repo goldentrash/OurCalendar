@@ -71,7 +71,7 @@ bool isDateStr(const std::wstring str)
 }
 bool isDurationUnit(const wchar_t c)
 {
-    return c == 'D' || c == 'M' || c == 'Y';
+    return c == L'D' || c == L'M' || c == L'Y';
 }
 
 std::wstring stepStr(std::wstring str, int start, StringType type)
@@ -168,16 +168,32 @@ std::wstring addDate(std::wstring trgDate, std::wstring gap, std::wstring durati
     std::wstring ret;
 
     if (durationUnit.compare(L"Y") == 0)
-    {
         year = std::to_wstring(std::stoi(year) + std::stoi(gap));
-    }
     else if (durationUnit.compare(L"M") == 0)
     {
-        month = std::to_wstring(std::stoi(year) + std::stoi(gap));
+        month = std::to_wstring(std::stoi(month) + std::stoi(gap));
+
+        if (std::stoi(month) > 12)
+        {
+            month = std::to_wstring(std::stoi(month) - std::stoi(L"12"));
+            year = std::to_wstring(std::stoi(year) + 1);
+        }
+
+        if (month.size() == 1)
+            month = L"0" + month;
     }
     else
     {
-        day = std::to_wstring(std::stoi(year) + std::stoi(gap));
+        day = std::to_wstring(std::stoi(day) + std::stoi(gap));
+
+        if (std::stoi(day) > 31)
+        {
+            day = std::to_wstring(std::stoi(day) - std::stoi(L"31"));
+            month = std::to_wstring(std::stoi(month) + 1);
+        }
+
+        if (day.size() == 1)
+            day = L"0" + day;
     }
 
     ret = year + L"-" + month + L"-" + day;
@@ -185,9 +201,4 @@ std::wstring addDate(std::wstring trgDate, std::wstring gap, std::wstring durati
         ret = addDate(ret, L"-1", L"D");
 
     return ret;
-}
-
-std::wstring calcDateGap(std::wstring endDate, std::wstring startDate)
-{
-    return std::to_wstring(std::stoi(endDate) - std::stoi(startDate));
 }
