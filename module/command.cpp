@@ -193,7 +193,7 @@ void del(std::wstring userInput)
         {
             parameters = parseParameter(userInput, syntax1);
             for (task t : registeredTasks)
-                if (t.id.compare(parameters[2]) || t.recurringId.compare(parameters[2]) == 0)
+                 if (t.id.compare(parameters[2])==0 || t.recurringId.compare(parameters[2]) == 0)
                     targetTasks.push_back(t);
 
             if (targetTasks.empty())
