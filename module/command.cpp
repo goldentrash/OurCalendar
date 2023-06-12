@@ -94,7 +94,7 @@ void add(std::wstring userInput)
             // 반복 일정 생성
             std::wstring sdate = addDate(newTask.startDate, recurringGap, recurringDurationUnit);
             std::wstring edate = addDate(newTask.endDate, recurringGap, recurringDurationUnit);
-            while (dateCompare(edate, L"2040-01-01") != -1)
+            while (stepStr(sdate, 0, DATE).size() != 0)
             {
                 task t;
                 t.compatable = newTask.compatable;

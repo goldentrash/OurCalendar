@@ -60,7 +60,7 @@ bool isDateStr(const std::wstring str)
 
     int dayLimit[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (std::stoi(year) % 4 == 0 && (std::stoi(year) % 100 != 0 || std::stoi(year) % 400 == 0)) // 윤년계산
-        dayLimit[2] = 29;
+        dayLimit[1] = 29;
 
     if (year.compare(L"2000") < 0 || year.compare(L"2040") > 0 ||
         month.compare(L"01") < 0 || month.compare(L"12") > 0 ||
@@ -161,43 +161,46 @@ int dateCompare(std::wstring a, std::wstring b)
 
 std::wstring addDate(std::wstring trgDate, std::wstring gap, std::wstring durationUnit)
 {
-    std::wstring year = stepStr(trgDate, 0, NUM);
-    std::wstring month = stepStr(trgDate, 5, NUM);
-    std::wstring day = stepStr(trgDate, 8, NUM);
+    int year = std::stoi(stepStr(trgDate, 0, NUM));
+    int month = std::stoi(stepStr(trgDate, 5, NUM));
+    int day = std::stoi(stepStr(trgDate, 8, NUM));
+    int g = std::stoi(gap);
 
     std::wstring ret;
 
     if (durationUnit.compare(L"Y") == 0)
-        year = std::to_wstring(std::stoi(year) + std::stoi(gap));
+        year += g;
     else if (durationUnit.compare(L"M") == 0)
     {
-        month = std::to_wstring(std::stoi(month) + std::stoi(gap));
-
-        if (std::stoi(month) > 12)
-        {
-            month = std::to_wstring(std::stoi(month) - std::stoi(L"12"));
-            year = std::to_wstring(std::stoi(year) + 1);
-        }
-
-        if (month.size() == 1)
-            month = L"0" + month;
+        month += g;
+        year += month / 12;
+        month %= 12;
     }
     else
     {
-        day = std::to_wstring(std::stoi(day) + std::stoi(gap));
-
-        if (std::stoi(day) > 31)
+        int dayLimit[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        day += g;
+        while (dayLimit[month] < day)
         {
-            day = std::to_wstring(std::stoi(day) - std::stoi(L"31"));
-            month = std::to_wstring(std::stoi(month) + 1);
-        }
+            day -= dayLimit[month];
 
-        if (day.size() == 1)
-            day = L"0" + day;
+            month++;
+            if (month == 13)
+            {
+                month = 1;
+                year++;
+            }
+        }
     }
 
-    ret = year + L"-" + month + L"-" + day;
-    while (!isDateStr(ret))
+    ret = std::to_wstring(year) + L"-";
+    if (month < 10)
+        ret += L"0";
+    ret += std::to_wstring(month) + L"-";
+    if (day < 10)
+        ret += L"0";
+    ret += std::to_wstring(day);
+    while (!isDateStr(ret) && year < 2040)
         ret = addDate(ret, L"-1", L"D");
 
     return ret;
