@@ -42,14 +42,14 @@ void help(std::wstring userInput)
         L"[search] + [공백 문자열] + [날짜 문자열] + [공백 문자열] + [날짜 문자열] + [개행 문자열]",
         L"[delete] + [공백 문자열] + [순수 문자열] + [개행 문자열]",
         L"[delete] + [공백 문자열] + [날짜 문자열] + [공백 문자열] + [날짜 문자열] + [개행 문자열]",
-        L"[quit] + [개행 문자열]"};
+        L"[quit] + [개행 문자열]" };
     for (std::wstring syntax : syntaxes)
         printSysMsg(syntax);
 }
 
 void add(std::wstring userInput)
 {
-    std::vector<StringType> syntax = {PURE,
+    std::vector<StringType> syntax = { PURE,
                                       SPACE,
                                       DATE,
                                       SPACE,
@@ -57,10 +57,10 @@ void add(std::wstring userInput)
                                       SPACE,
                                       BOOL,
                                       SPACE,
-                                      BOOL};
-    std::vector<StringType> syntax2 = {NUM,
+                                      BOOL };
+    std::vector<StringType> syntax2 = { NUM,
                                        SPACE,
-                                       DURATION_UNIT};
+                                       DURATION_UNIT };
 
     try
     {
@@ -79,6 +79,12 @@ void add(std::wstring userInput)
         if (dateCompare(newTask.startDate, newTask.endDate) == -1)
             throw L"인자1의 날짜는 인자2의 날짜보다 앞서거나 같아야 합니다.";
 
+        std::list<task> registeredTasks = readTasks();
+        for (const task& t : newTasks)
+            if (hasOverlappingTask(registeredTasks, t))
+                throw L"해당 기간에 이미 다른 일정이 등록되어 있습니다.";
+        
+        
         // 반복 일정일 경우
         if (parameters[8].compare(L"Y") == 0)
         {
@@ -108,10 +114,7 @@ void add(std::wstring userInput)
             }
         }
 
-        std::list<task> registeredTasks = readTasks();
-        for (const task &t : newTasks)
-            if (hasOverlappingTask(registeredTasks, t))
-                throw L"해당 기간에 이미 다른 일정이 등록되어 있습니다.";
+        
 
         printSysMsg(L"일정 내용을 입력해 주세요");
         std::wstring contents = getUserInput();
@@ -128,7 +131,7 @@ void add(std::wstring userInput)
         else
             recurringId = L"0";
 
-        for (task &t : newTasks)
+        for (task& t : newTasks)
         {
             t.contents = contents;
             t.recurringId = recurringId;
@@ -147,7 +150,7 @@ void add(std::wstring userInput)
         printSysMsg(L"일정이 등록되었습니다.");
         readTasks(); // 무결성 검사
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(err);
         return;
@@ -156,15 +159,15 @@ void add(std::wstring userInput)
 
 void del(std::wstring userInput)
 {
-    std::vector<StringType> syntax1 = {PURE,
+    std::vector<StringType> syntax1 = { PURE,
                                        SPACE,
-                                       PURE};
+                                       PURE };
 
-    std::vector<StringType> syntax2 = {PURE,
+    std::vector<StringType> syntax2 = { PURE,
                                        SPACE,
                                        DATE,
                                        SPACE,
-                                       DATE};
+                                       DATE };
 
     std::list<task> registeredTasks = readTasks();
     std::vector<std::wstring> parameters;
@@ -178,7 +181,7 @@ void del(std::wstring userInput)
         if (targetTasks.empty())
             throw L"해당하는 기간에 시작하는 일정이 없습니다.";
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         if (!parameters.empty())
         {
@@ -193,14 +196,14 @@ void del(std::wstring userInput)
         {
             parameters = parseParameter(userInput, syntax1);
             for (task t : registeredTasks)
-                 if (t.id.compare(parameters[2])==0 || t.recurringId.compare(parameters[2]) == 0)
+                if (t.id.compare(parameters[2]) == 0 || t.recurringId.compare(parameters[2]) == 0)
                     targetTasks.push_back(t);
 
             if (targetTasks.empty())
                 throw L"해당하는 id의 일정이 없습니다.";
         }
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(err);
         return;
@@ -211,7 +214,7 @@ void del(std::wstring userInput)
     printSysMsg(L"위 일정을 삭제하시겠습니까? (Y/N)");
 
     std::wstring deleteConfirm = getUserInput();
-    std::vector<StringType> deleteConfirmSyntax = {BOOL};
+    std::vector<StringType> deleteConfirmSyntax = { BOOL };
     try
     {
         if (parseParameter(deleteConfirm, deleteConfirmSyntax)[0].compare(L"Y") == 0)
@@ -238,7 +241,7 @@ void del(std::wstring userInput)
 
         readTasks();
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(L"문법에 맞지 않는 입력, 삭제를 취소합니다.");
     }
@@ -246,13 +249,13 @@ void del(std::wstring userInput)
 
 void search(std::wstring userInput)
 {
-    std::vector<StringType> syntax1 = {PURE};
+    std::vector<StringType> syntax1 = { PURE };
 
-    std::vector<StringType> syntax2 = {PURE,
+    std::vector<StringType> syntax2 = { PURE,
                                        SPACE,
                                        DATE,
                                        SPACE,
-                                       DATE};
+                                       DATE };
 
     std::list<task> registeredTasks = readTasks();
     std::vector<std::wstring> parameters;
@@ -265,7 +268,7 @@ void search(std::wstring userInput)
             throw L"검색 시작 날짜는 종료 날짜보다 늦을 수 없습니다.";
         targetTasks = overlappingTasks(registeredTasks, parameters[2], parameters[4]);
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         if (!parameters.empty())
         {
@@ -282,7 +285,7 @@ void search(std::wstring userInput)
             targetTasks = registeredTasks;
         }
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(err);
         return;
@@ -294,13 +297,13 @@ void search(std::wstring userInput)
 
 bool quit(std::wstring userInput)
 {
-    std::vector<StringType> syntax = {PURE};
+    std::vector<StringType> syntax = { PURE };
 
     try
     {
         parseParameter(userInput, syntax);
     }
-    catch (wchar_t const *err)
+    catch (wchar_t const* err)
     {
         printSysMsg(err);
         return false;
